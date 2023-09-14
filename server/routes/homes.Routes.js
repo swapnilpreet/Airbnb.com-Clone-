@@ -195,6 +195,7 @@ router.post("/get-all-homes", authentication, async (req, res) => {
     if (Category) {
       filters.Category = { $in: Category };
     }
+    
     const getHomes = await AddHome.find(filters).populate("owner");
     // console.log(getHomes)
     res.send({
@@ -209,6 +210,49 @@ router.post("/get-all-homes", authentication, async (req, res) => {
     });
   }
 });
+
+
+// router.post("/get-all-homes", authentication, async (req, res) => {
+//   try {
+//     const pageNumber = parseInt(req.query.pageNumber) || ;
+//     const limit = parseInt(req.query.limit) || 12;
+//     const { Category, region } = req.body;
+//     let filters = {};
+//     const totalPosts = await AddHome.countDocuments().exec();
+//     let startIndex = pageNumber * limit;
+//     const endIndex = (pageNumber + 1) * limit;
+//     filters.totalPosts = totalPosts;
+//     if (startIndex > 0) {
+//       filters.previous = {
+//         pageNumber: pageNumber - 1,
+//         limit: limit,
+//       };
+//     }
+//     if (endIndex < (await AddHome.countDocuments().exec())) {
+//       filters.next = {
+//         pageNumber: pageNumber + 1,
+//         limit: limit,
+//       };
+//     }
+ 
+//     const getHomes = await AddHome.find().skip(startIndex)
+//     .limit(limit)
+//     .exec();
+//     getHomes.rowsPerPage = limit;
+
+//     res.send({
+//       success: true,
+//       message: "fetting user data",
+//       data: getHomes,
+//     });
+//   } catch (error) {
+//     res.send({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// });
+
 
 router.put("/update-homes-status/:id", authentication, async (req, res) => {
   try {

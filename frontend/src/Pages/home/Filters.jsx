@@ -11,6 +11,7 @@ import { TbBeach, TbHomeShield, TbUfo } from 'react-icons/tb';
 import { GetAllHome } from '../../ApiCalls/home'
 import { useDispatch, useSelector } from 'react-redux'
 import { SetHomes } from '../../Redux/HomeSlice'
+import { SetLoader } from '../../Redux/LoadingSlice'
 
 const Filters = () => {
     const dispatch = useDispatch();
@@ -18,13 +19,20 @@ const Filters = () => {
 
     const getFilterData=async(filters)=>{
         try {
+            dispatch(SetLoader(true));
             const response = await GetAllHome({Category:filters,region:region});
             if (response.success) {
+                setTimeout(() => {
+                    dispatch(SetLoader(false));
+                }, 3000);
                 dispatch(SetHomes(response.data));
             } else {
             throw new Error("Couldn't gets all homes");
             }
         } catch (error) {
+            setTimeout(() => {
+                dispatch(SetLoader(false));
+            }, 3000);
             console.log(error);
         }
     }
@@ -32,7 +40,7 @@ const Filters = () => {
   return (
     <Box pl={10} pr={10} pt={4}>
          <Box>
-            <Flex alignItems={'center'} gap={5} overflowX={'scroll'}>
+            <Flex alignItems={'center'} gap={9} overflowX={'scroll'}>
  
                 <Box cursor={'pointer'} onClick={()=>getFilterData('')}>
                     <Flex alignItems={'center'} direction={'column'}>
@@ -187,6 +195,7 @@ const Filters = () => {
                     <Text fontSize={'xs'}>Golfing</Text>
                     </Flex>
                 </Box>
+
             </Flex>
         </Box>
     </Box>

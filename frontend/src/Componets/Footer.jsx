@@ -1,13 +1,23 @@
-import { Box, Container , SimpleGrid, Stack, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Container,
+  Divider,
+  Flex,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 import React from "react";
+import { FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <Box bg={'#CBD5E0'}>
+    <Box bg={"#CBD5E0"}>
       <Container as={Stack} maxW={"6xl"} py={10}>
-        <SimpleGrid columns={{ base: 1, sm: 2, md: 4 }} spacing={8}>
+        <Flex justifyContent={"space-between"}>
           <Stack align={"flex-start"}>
-            <Text fontSize={'xl'} fontWeight={'bold'}>Company</Text>
+            <Text fontSize={"xl"} fontWeight={"bold"}>
+              Company
+            </Text>
 
             <Box as="a" href={"#"}>
               About Us
@@ -24,7 +34,9 @@ const Footer = () => {
           </Stack>
 
           <Stack align={"flex-start"}>
-            <Text  fontSize={'xl'} fontWeight={'bold'}>Support</Text>
+            <Text fontSize={"xl"} fontWeight={"bold"}>
+              Support
+            </Text>
             <Box as="a" href={"#"}>
               Help Center
             </Box>
@@ -37,7 +49,9 @@ const Footer = () => {
           </Stack>
 
           <Stack align={"flex-start"}>
-            <Text fontSize={'xl'} fontWeight={'bold'}>Legal</Text>
+            <Text fontSize={"xl"} fontWeight={"bold"}>
+              Legal
+            </Text>
             <Box as="a" href={"#"}>
               Cookies Policy
             </Box>
@@ -51,8 +65,23 @@ const Footer = () => {
               Law Enforcement
             </Box>
           </Stack>
+        </Flex>
+        <Divider />
+        <Box>
+          <Flex justifyContent={"space-between"}>
+            <Box>
+              <Text>© 2022 Chakra Templates. All rights reserved</Text>
+            </Box>
 
-        </SimpleGrid>
+            <Box>
+              <Stack direction={"row"} spacing={6}>
+                <FaTwitter />
+                <FaYoutube />
+                <FaInstagram />
+              </Stack>
+            </Box>
+          </Flex>
+        </Box>
       </Container>
     </Box>
   );

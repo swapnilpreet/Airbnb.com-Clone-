@@ -1,4 +1,13 @@
-import { Box, Flex, Image, SimpleGrid, Text, useToast } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Image,
+  SimpleGrid,
+  Skeleton,
+  SkeletonText,
+  Text,
+  useToast,
+} from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import HomeNavbar from "../../Componets/navbar/HomeNavbar";
 import Filters from "./Filters";
@@ -12,11 +21,14 @@ import { GetCurrentUser } from "../../ApiCalls/user";
 import { SetUser } from "../../Redux/userSlice";
 import redheart from "../../Accests/heart-red.png";
 import { SetHomes } from "../../Redux/HomeSlice";
+import { SetLoader } from "../../Redux/LoadingSlice";
 
 const Home = () => {
   const { user } = useSelector((state) => state?.users);
   const { homes } = useSelector((state) => state?.homes);
   const { region } = useSelector((state) => state?.region);
+  const { loading } = useSelector((state) => state.loaders);
+  console.log(loading)
   const dispatch = useDispatch();
 
   const handleWishlist = async (id) => {
@@ -35,13 +47,20 @@ const Home = () => {
 
   const getData = async () => {
     try {
+      dispatch(SetLoader(true));
       const response = await GetAllHome({ region: region });
-      if (response.success) {
-          dispatch(SetHomes(response.data));
+      if (response.success){
+        dispatch(SetHomes(response.data));
+        setTimeout(() => {
+          dispatch(SetLoader(false));
+        }, 3000);
       } else {
         throw new Error(response.message);
       }
     } catch (error) {
+      setTimeout(() => {
+        dispatch(SetLoader(false));
+      }, 3000);
       console.error(error.message);
     }
   };
@@ -68,55 +87,66 @@ const Home = () => {
     <>
       <HomeNavbar />
       <Box pt={20}>
-      {/* setmyhome={setmyhome} */}
         <Filters />
-        <Box m={[0, 2, 2, 10]} p={[20, 0, 0, 0]}>
-          <SimpleGrid columns={[1, 2, 3, 5]} spacing={[0, 5, 3, 6]}>
-            {homes
-              .filter((home) => home.status !== "pending")
-              .map((home, index) => (
-                <Box borderRadius={"10px"} w={"280px"} key={index}>
-                  <Link to={`/homes/${home._id}`}>
-                    <Image
-                      h={"200px"}
-                      w={"280px"}
-                      borderRadius={"10px"}
-                      src={home.photos[0]}
-                    ></Image>
+        <Box m={[0, 2, 2, 5]} p={[20, 0, 0, 5]}>
+          <SimpleGrid columns={[1, 2, 3, 5]} spacing={[0, 5, 3, 10]}>
+            {homes?.filter((home) => home?.status !== "pending")?.map((home, index) => (
+              <Box borderRadius={"10px"} w={"100%"} key={index}>
+                  <Link to={`/homes/${home?._id}`}>
+                  <Skeleton isLoaded={!loading}>
+                      <Image
+                        h={"200px"}
+                        w={"100%"}
+                        borderRadius={"10px"}
+                        src={home?.photos[0]}
+                      ></Image>
+                   </Skeleton>
                   </Link>
-                  <Flex justifyContent={"space-between"} p={2}>
-                    <Box>
-                      <Box overflow={"hidden"} h={6}>
-                        <Text>{home.address}</Text>
-                      </Box>
-                      <Text fontSize={"xs"}>{home.Category}</Text>
-                      <Text fontSize={"xs"}>{home.region}</Text>
-                      <Text>
-                        &#8377;{" "}
-                        {new Intl.NumberFormat("en-IN").format(home.price)}{" "}
-                        night
-                      </Text>
-                    </Box>
 
-                    <Box>
-                      <Flex alignItems={"center"}>
-                        <BiSolidStar />
-                        <Text>4.9</Text>
-                      </Flex>
-                      <Box
-                        onClick={() => handleWishlist(home._id)}
-                        cursor={"pointer"}
-                      >
-                        {user?.wishlist.includes(home?._id) ? (
-                          <>
-                            <Image boxSize={"32px"} src={redheart}></Image>
-                          </>
-                        ) : (
-                          <AiOutlineHeart size={32} />
-                        )}
+                  <SkeletonText
+                    isLoaded={!loading}
+                    mt={2}
+                    noOfLines={2}
+                    spacing="2"
+                    skeletonHeight="5"
+                    fitContent
+                  >
+                    <Flex justifyContent={"space-between"} p={2}>
+                      <Box>
+                        <Box overflow={"hidden"} h={6}>
+                          <Text>{home?.address}</Text>
+                        </Box>
+                        <Text fontSize={"xs"}>{home?.Category}</Text>
+                        <Text fontSize={"xs"}>{home?.region}</Text>
+                        <Flex alignItems={'center'} gap={1}>
+                        <Text fontWeight={'bold'}>
+                          &#8377;{" "}
+                          {new Intl.NumberFormat("en-IN").format(home?.price)}{" "}
+                        </Text>
+                        <Text fontSize={'xs'}>night</Text>
+                        </Flex>
                       </Box>
-                    </Box>
-                  </Flex>
+
+                      <Box>
+                        <Flex alignItems={"center"} gap={1}>
+                          <BiSolidStar size={18}/>
+                          <Text fontSize={'xs'}>{home?.rating}</Text>
+                        </Flex>
+                        <Box
+                          onClick={() => handleWishlist(home?._id)}
+                          cursor={"pointer"}
+                        >
+                          {user?.wishlist.includes(home?._id) ? (
+                            <>
+                              <Image boxSize={"32px"} src={redheart}></Image>
+                            </>
+                          ) : (
+                            <AiOutlineHeart size={32} />
+                          )}
+                        </Box>
+                      </Box>
+                    </Flex>
+                  </SkeletonText>
                 </Box>
               ))}
           </SimpleGrid>

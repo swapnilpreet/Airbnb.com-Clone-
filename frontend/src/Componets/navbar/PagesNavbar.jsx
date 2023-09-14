@@ -25,15 +25,15 @@ const PagesNavbar = () => {
   const dispatch = useDispatch();
 
   const handleLogout =()=>{
+    Navigate('/login')
      dispatch(SetUser(null))
-     window.location.href='/login'
      localStorage.removeItem('token');
   }
   const {user} =useSelector((state)=>state?.users);
   
   return (
     <>
-    <Box pos="fixed" w={'100%'}  bg={'white'}  top={0} border={"1px solid blue"} zIndex={"200"}>
+    <Box pos="fixed" w={'100%'}  bg={'white'}  top={0} zIndex={"200"}>
 
       <Flex justifyContent={"space-between"} p={2} w={["100%","100%","100%","60%"]} alignItems={'center'} m={'auto'}>
         <Box>

@@ -68,7 +68,8 @@ const Review = ({ singlehome }) => {
   const addModel = useDisclosure();
 
   const [ReviewsData, setReviewData] = useState([]);
-  
+
+   console.log(ReviewsData)
   const handleAddReview = async (id) => {
     try {
       const response = await AddReview(id, {
@@ -154,12 +155,7 @@ const Review = ({ singlehome }) => {
   }, [singlehome]);
 
   return (
-    <Box
-      width={"100%"}
-      pt={2}
-      h={"300px"}
-      overflow={"scroll"}
-    >
+    <Box pt={2}>
       <Box m={2}>
         <Flex alignItems={"center"} justifyContent={"space-between"}>
           <Box>
@@ -186,67 +182,80 @@ const Review = ({ singlehome }) => {
           </Box>
         </Flex>
       </Box>
-      <SimpleGrid columns={2} spacing={10} m={2}>
-        {ReviewsData?.map((item, index) => (
-          <>
-            <Box key={index}>
-              <Card>
-                <CardHeader>
-                  <Flex spacing="4">
-                    <Flex flex="1" gap="4" alignItems="center" flexWrap="wrap">
-                      <Avatar
-                        name="Segun Adebayo"
-                        src="https://bit.ly/sage-adebayo"
-                      />
-                      <Box>
-                        <Heading size="sm">{item?.user.name}</Heading>
-                        <Text>{item?.user.role}, Airbnb</Text>
-                      </Box>
-                    </Flex>
 
-                    <>
-                      <Menu>
-                        {item?.user._id === user?._id ? (
-                          <MenuButton
-                            as={Button}
-                            variant="ghost"
-                            colorScheme="gray"
-                            aria-label="See menu"
+      {ReviewsData.length !== 0 ? (
+        <>
+          <Box h={"300px"} width={"100%"} overflow={"scroll"}>
+            <SimpleGrid columns={[1, 1, 2, 2]} spacing={10} m={2}>
+              {ReviewsData?.map((item, index) => (
+                <>
+                  <Box key={index}>
+                    <Card>
+                      <CardHeader>
+                        <Flex spacing="4">
+                          <Flex
+                            flex="1"
+                            gap="4"
+                            alignItems="center"
+                            flexWrap="wrap"
                           >
-                            <BsThreeDotsVertical />
-                          </MenuButton>
-                        ) : null}
-                        <MenuList>
-                          <MenuItem
-                            onClick={() => handleDeleteReview(item?._id)}
-                          >
-                            Delete
-                          </MenuItem>
-                          <MenuItem
-                            onClick={() => getReviewByidhanlde(item?._id)}
-                          >
-                            <Text onClick={onOpen}>Edit</Text>
-                          </MenuItem>
-                        </MenuList>
-                      </Menu>
-                    </>
-                  </Flex>
-                </CardHeader>
+                            <Avatar
+                              name="Segun Adebayo"
+                              src="https://bit.ly/sage-adebayo"
+                            />
+                            <Box>
+                              <Heading size="sm">{item?.user.name}</Heading>
+                              <Text>{item?.user.role}, Airbnb</Text>
+                            </Box>
+                          </Flex>
 
-                <CardBody>
-                  <Flex gap={2}>
-                    <BiSolidStar size={20} />
-                    <Text>{item?.rating}</Text>
-                  </Flex>
-                  <Box h={"24"} overflow={"scroll"}>
-                    <Text>{item?.comment}</Text>
+                          <>
+                            <Menu>
+                              {item?.user._id === user?._id ? (
+                                <MenuButton
+                                  as={Button}
+                                  variant="ghost"
+                                  colorScheme="gray"
+                                  aria-label="See menu"
+                                >
+                                  <BsThreeDotsVertical />
+                                </MenuButton>
+                              ) : null}
+                              <MenuList>
+                                <MenuItem
+                                  onClick={() => handleDeleteReview(item?._id)}
+                                >
+                                  Delete
+                                </MenuItem>
+                                <MenuItem
+                                  onClick={() => getReviewByidhanlde(item?._id)}
+                                >
+                                  <Text onClick={onOpen}>Edit</Text>
+                                </MenuItem>
+                              </MenuList>
+                            </Menu>
+                          </>
+                        </Flex>
+                      </CardHeader>
+
+                      <CardBody>
+                        <Flex gap={2}>
+                          <BiSolidStar size={20} />
+                          <Text>{item?.rating}</Text>
+                        </Flex>
+                        <Box h={"24"} overflow={"scroll"}>
+                          <Text>{item?.comment}</Text>
+                        </Box>
+                      </CardBody>
+                    </Card>
                   </Box>
-                </CardBody>
-              </Card>
-            </Box>
-          </>
-        ))}
-      </SimpleGrid>
+                </>
+              ))}
+            </SimpleGrid>
+          </Box>
+        </>
+      ) : null}
+
       {/* Edit modal */}
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

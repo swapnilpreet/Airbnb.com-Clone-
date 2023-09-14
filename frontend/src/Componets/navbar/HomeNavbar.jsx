@@ -94,9 +94,9 @@ const HomeNavbar = () => {
   };
 
   const handleLogout = () => {
-    dispatch(SetUser(null));
+    navigate("/login");
     localStorage.removeItem("token");
-    window.location.href = "/login";
+    dispatch(SetUser(null));
   };
 
   const { user } = useSelector((state) => state?.users);
@@ -125,10 +125,10 @@ const HomeNavbar = () => {
               >
                 {regionDisplay !== "" ? regionDisplay : "Anywhere"}
               </Text>
-              <Text borderRight={"1px solid grey"} p={2} fontWeight={"bold"}>
+              <Text borderRight={"1px solid grey"} p={2}>
                 Anyweek
               </Text>
-              <Text borderRight={"1px solid grey"} p={2} fontWeight={"bold"}>
+              <Text borderRight={"1px solid grey"} p={2}>
                 Add guests
               </Text>
               <Box border={"1px solid red"} mr={1} p={1} borderRadius={"full"}>
@@ -172,6 +172,7 @@ const HomeNavbar = () => {
                     </ModalFooter>
                   </ModalContent>
                 </Modal>
+                
               </Box>
             </Flex>
           </Box>
