@@ -38,7 +38,7 @@ const Register = () => {
           duration: 2000,
           isClosable: true,
         });
-        window.location.href="/login";
+        navigate("/login");
         setCustomerSignUp({
           name:"",
           email: "",

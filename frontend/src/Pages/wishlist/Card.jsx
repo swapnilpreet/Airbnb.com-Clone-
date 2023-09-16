@@ -9,6 +9,8 @@ import {
   SkeletonText,
   Flex,
   useToast,
+  Divider,
+  Button,
 } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -108,7 +110,9 @@ export default function Card() {
   },[])
 
   return (
-    <SimpleGrid row={"auto"} columns={[1, 2, 3, 3]} spacing="40px">
+     <>
+     {wishlist.length !== '0' ? (
+      <SimpleGrid row={"auto"} columns={[1, 2, 3, 3]} spacing="40px">
       {wishlist.map((item) => (
         <Box
           role={"group"}
@@ -166,7 +170,6 @@ export default function Card() {
               <Text
                 color={"gray.500"}
                 fontSize={"sm"}
-                // border={'1px solid red'}
                 h={10}
                 textTransform={"uppercase"}
               >
@@ -189,5 +192,20 @@ export default function Card() {
         </Box>
       ))}
     </SimpleGrid>
+     ):(
+        <>
+        <Heading py={2}>Pending Homes</Heading>
+        <Divider />
+        <Text py={2}>No Pending Homes</Text>
+        <Text fontSize={"xs"} py={2}>
+          Admin Approved your All Homes or else you din't add any home yet!
+        </Text>
+        <Button variant={"outline"} onClick={() => navigate("/")}>
+          Start Searching
+        </Button>
+        <Divider mt={2} />
+      </>
+     )}
+     </>
   );
 }

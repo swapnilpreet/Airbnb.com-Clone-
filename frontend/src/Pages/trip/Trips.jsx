@@ -57,8 +57,6 @@ const Trips = () => {
     <>
       <PagesNavbar />
       <Layout>
-        {/* empty */}
-
         {booking?.length !== 0 ? (
           <>
             <Box>
@@ -71,7 +69,7 @@ const Trips = () => {
                       overflow="hidden"
                       variant="outline"
                     >
-                      {/* <Link to={`/homes/${item.home._id}`}> */}
+                      {/* <Link to={`/homes/${item.home._id}`}> */} 
                       <Box
                         onClick={() => Navigate(`/homes/${item.home._id}`)}
                         cursor={"pointer"}
@@ -144,15 +142,6 @@ const Trips = () => {
                         </CardFooter>
                       </Stack>
                     </Card>
-                    {/* <Text>{item.home.title}</Text>
-                  <Text>{item.price}</Text>
-                  <Text>{item.home.region}</Text>
-                  <Text>{item.checkIn}</Text>
-                  <Text>{item.checkOut}</Text>
-                  <Text>{item.guests}</Text>
-                  <Text>{item.home.owner.name}</Text>
-                  <Text>{item.home.owner.email}</Text>
-                  <Text>{item.home.rating}</Text> */}
                   </>
                 ))}
               </Box>
@@ -172,7 +161,7 @@ const Trips = () => {
                 Time to dust off your bags and start planning your next
                 adventure
               </Text>
-              <Button mt={8} variant={"outline"}>
+              <Button mt={8} variant={"outline"} onClick={()=>Navigate('/')}>
                 Start searching
               </Button>
             </Box>

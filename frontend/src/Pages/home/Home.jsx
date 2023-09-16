@@ -35,13 +35,26 @@ const Home = () => {
     try {
       const response = await AddtoWishlist({ prodId: id });
       if (response.success) {
-        getData();
+        getData1();
         getuser();
       } else {
         throw new Error("Failed to add wihlist");
       }
     } catch (error) {
       console.log(error.message);
+    }
+  };
+
+  const getData1 = async () => {
+    try {
+      const response = await GetAllHome({ region: region });
+      if (response.success){
+        dispatch(SetHomes(response.data));
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      console.error(error.message);
     }
   };
 

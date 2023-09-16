@@ -5,17 +5,24 @@ import {
   Button,
   Card,
   CardBody,
+  CardFooter,
   Divider,
   Flex,
   Heading,
   Image,
   Stack,
   Text,
+  Tooltip,
+  useToast,
 } from "@chakra-ui/react";
 
-import { GetUserHome } from "../../ApiCalls/home";
+import { DeleteAirbnbHome, GetUserHome } from "../../ApiCalls/home";
+import { useNavigate } from "react-router-dom";
+import moment from "moment";
 
 const PendingHomes = ({ myhome, setmyhome }) => {
+  const navigate = useNavigate();
+  const toast = useToast();
   const getData = async () => {
     try {
       const response = await GetUserHome();
@@ -26,6 +33,32 @@ const PendingHomes = ({ myhome, setmyhome }) => {
       }
     } catch (error) {
       console.error(error.message);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await DeleteAirbnbHome(id);
+      if (response.success) {
+        toast({
+          title: "Deleted Successfully",
+          description: response.message,
+          status: "success",
+          duration: 1000,
+          isClosable: true,
+        });
+        navigate('/airbnb-your-home');
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      toast({
+        title: "Error Occurred",
+        description: error.message,
+        status: "success",
+        duration: 1000,
+        isClosable: true,
+      });
     }
   };
 
@@ -45,25 +78,56 @@ const PendingHomes = ({ myhome, setmyhome }) => {
                 direction={{ base: "column", sm: "row" }}
                 overflow="hidden"
                 variant="outline"
-                mb={2}
               >
-                <Image
-                  objectFit="cover"
-                  maxW={{ base: "100%", sm: "200px" }}
-                  src={offer.photos[0]}
-                  alt="Caffe Latte"
-                />
-
+                <Box
+                  onClick={() => navigate(`/homes/${offer._id}`)}
+                  cursor={"pointer"}
+                >
+                  <Image
+                    objectFit="cover"
+                    h={"100%"}
+                    maxW={{ base: "100%", sm: "350px" }}
+                    src={offer.photos[0]}
+                    alt="Caffe Latte"
+                  />
+                </Box>
                 <Stack>
                   <CardBody>
                     <Heading size="md">{offer.title}</Heading>
                     <Text>{offer.address}</Text>
-                    <Flex gap={10} py={2}>
-                      <Text>Region: {offer.region}</Text>
-                      <Text>Category: {offer.Category}</Text>
-                      <Text>status: {offer.status}</Text>
+                    <Flex gap={10} fontSize={"xs"}>
+                      <Text>Region : {offer.region}</Text>
+                      <Text>Category : {offer.Category}</Text>
+                      <Text>status : {offer.status}</Text>
+                    </Flex>
+                    <Flex gap={20} fontSize={"xs"}>
+                      <Box>
+                        <Flex gap={2} alignItems={"center"}>
+                          <Box>
+                            <Text>
+                              Price :{" "}
+                              {new Intl.NumberFormat("en-IN").format(
+                                offer.price
+                              )}
+                            </Text>
+                          </Box>
+                        </Flex>
+                      </Box>
+                      <Text>Guests : {offer.maxGuests}</Text>
                     </Flex>
                   </CardBody>
+
+                  <CardFooter>
+                    <Flex gap={10}>
+                      <Button
+                        variant="solid"
+                        colorScheme="red"
+                        onClick={() => handleDelete(offer._id)}
+                      >
+                        Delete Home
+                      </Button>
+                    </Flex>
+                  </CardFooter>
                 </Stack>
               </Card>
             ))}
@@ -76,7 +140,9 @@ const PendingHomes = ({ myhome, setmyhome }) => {
           <Text fontSize={"xs"} py={2}>
             Admin Approved your All Homes or else you din't add any home yet!
           </Text>
-          <Button variant={"outline"}>Start Searching</Button>
+          <Button variant={"outline"} onClick={() => navigate("/")}>
+            Start Searching
+          </Button>
           <Divider mt={2} />
         </>
       )}

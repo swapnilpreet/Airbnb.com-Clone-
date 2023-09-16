@@ -1,41 +1,52 @@
 import React, { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { GetCurrentUser } from '../../ApiCalls/user';
+import { useSelector } from 'react-redux';
+import Error from '../Error';
+// import { useNavigate } from 'react-router-dom'
+// import { GetCurrentUser } from '../../ApiCalls/user';
 
 
 const AdminProtected = ({children}) => {
-    const navigate= useNavigate();
-    const validateToken=async()=>{
-        try {
-            const response = await GetCurrentUser();
-            if(response.success){
-                 if(response.data.role!=='user'){
-                     
-                 }else{
-                    throw new Error(response.message);
-                 }
-            }else{
-            navigate('/error')
-            throw new Error("Your are not authoriz");
-            }
-        } catch (error) {
-            navigate('/error')
-            console.log(error.message);
-        }
-    }
+    // const navigate= useNavigate();
+    const { user } = useSelector((state) => state?.users);
 
-    useEffect(() => {
-        if(localStorage.getItem('token')){
-            validateToken();
-        }else{
-            navigate('/error')
-        }
-    }, [])
+    // const validateToken=async()=>{
+    //     try {
+    //         const response = await GetCurrentUser();
+    //         if(response.success){
+    //              if(response.data.role!=='user'){
+                    
+    //              }else{
+    //                 throw new Error(response.message);
+    //              }
+    //         }else{
+    //             navigate('/error')
+    //             throw new Error("Your are not authorize");
+    //         }
+    //     } catch (error) {
+    //         navigate('/error')
+    //         console.log(error.message);
+    //     }
+    // }
+
+    // useEffect(() => {
+    //     if(localStorage.getItem('token')){
+    //         validateToken();
+    //     }else{
+    //         navigate('/error')
+    //     }
+    // },[])
     
 
 
   return (
-    <div>{children}</div>
+    <>
+    {user?.role === 'user' ? (
+        <>
+           <Error/>
+        </>
+    ):(<div>{children}</div>)}
+    
+    </>
   )
 }
 

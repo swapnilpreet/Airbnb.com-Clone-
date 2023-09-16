@@ -34,7 +34,7 @@ import {
   GetAirbnbHomeById,
 } from "../../ApiCalls/home";
 import { BiSolidHomeHeart } from "react-icons/bi";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import PhotosUploader from "../../Componets/PhotosUploader";
 import Amenties from "../../Componets/Amenties";
 
@@ -119,6 +119,7 @@ const GetmyHomes = ({ myhome, getHomesData }) => {
   const [price, setPrice] = useState(0);
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const navigate=useNavigate()
 
   const handleEditHome = async (id) => {
     try {
@@ -270,7 +271,7 @@ const GetmyHomes = ({ myhome, getHomesData }) => {
              <Divider/>
              <Text py={2}>No Approved Homes</Text>
              <Text fontSize={'xs'} py={2}>Admin Not Approve your Homes or else you din't add any home yet!</Text>
-             <Button variant={'outline'}>Start Searching</Button>
+             <Button variant={'outline'} onClick={()=>navigate('/')}>Start Searching</Button>
              <Divider mt={2}/>
           </>
         )}
