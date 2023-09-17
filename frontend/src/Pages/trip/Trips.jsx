@@ -23,6 +23,7 @@ import { MdDoneAll } from "react-icons/md";
 const Trips = () => {
   const [booking, setbooking] = useState([]);
   const Navigate = useNavigate();
+
   const getuserBooking = async () => {
     try {
       const response = await Getuserbooking();
@@ -69,15 +70,15 @@ const Trips = () => {
                       overflow="hidden"
                       variant="outline"
                     >
-                      {/* <Link to={`/homes/${item.home._id}`}> */} 
                       <Box
                         onClick={() => Navigate(`/homes/${item.home._id}`)}
                         cursor={"pointer"}
+                        h={'250px'}
                       >
                         <Image
                           objectFit="cover"
                           h={"100%"}
-                          maxW={{ base: "100%", sm: "350px" }}
+                          w={['100%','350px','350px','350px']}
                           src={item.home.photos[0]}
                           alt="Caffe Latte"
                         />

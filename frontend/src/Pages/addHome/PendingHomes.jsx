@@ -87,24 +87,28 @@ const PendingHomes = () => {
                 <Box
                   onClick={() => navigate(`/homes/${offer._id}`)}
                   cursor={"pointer"}
+                  h={'250px'}
                 >
                   <Image
                     objectFit="cover"
                     h={"100%"}
-                    maxW={{ base: "100%", sm: "350px" }}
+                    w={['100%','350px','350px','350px']}
                     src={offer.photos[0]}
                     alt="Caffe Latte"
                   />
+
                 </Box>
                 <Stack>
                   <CardBody>
                     <Heading size="md">{offer.title}</Heading>
                     <Text>{offer.address}</Text>
+                    
                     <Flex gap={10} fontSize={"xs"}>
                       <Text>Region : {offer.region}</Text>
                       <Text>Category : {offer.Category}</Text>
                       <Text>status : {offer.status}</Text>
                     </Flex>
+
                     <Flex gap={20} fontSize={"xs"}>
                       <Box>
                         <Flex gap={2} alignItems={"center"}>
@@ -120,6 +124,7 @@ const PendingHomes = () => {
                       </Box>
                       <Text>Guests : {offer.maxGuests}</Text>
                     </Flex>
+
                   </CardBody>
 
                   <CardFooter>
@@ -133,6 +138,7 @@ const PendingHomes = () => {
                       </Button>
                     </Flex>
                   </CardFooter>
+
                 </Stack>
               </Card>
             ))}

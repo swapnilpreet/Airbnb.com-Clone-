@@ -7,9 +7,10 @@ import {AiOutlineHeart} from 'react-icons/ai'
 import fillheart from '../Accests/heart-red.png'
 import { axiosInstance } from '../ApiCalls/axiosinstance';
 
-// AiOutlineHeart
 
-const PhotosUploader = ({ addedPhotos, setAddedPhotos }) => {
+//AiOutlineHeart
+
+const PhotosUploader = ({ addedPhotos, setAddedPhotos })=>{
   const [photoLink, setphotoLink] = useState('');
 
   const addPhotoByLink = async (e) => {

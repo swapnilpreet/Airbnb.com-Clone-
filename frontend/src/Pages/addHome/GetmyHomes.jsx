@@ -242,12 +242,26 @@ const GetmyHomes = () => {
                 variant="outline"
                 mb={2}
               >
-                <Image
+                {/* <Image
                   objectFit="cover"
                   maxW={{ base: "100%", sm: "200px" }}
                   src={offer.photos[0]}
                   alt="Caffe Latte"
-                />
+                /> */}
+                <Box
+                  onClick={() => navigate(`/homes/${offer._id}`)}
+                  cursor={"pointer"}
+                  h={'250px'}
+                >
+                  <Image
+                    objectFit="cover"
+                    h={"100%"}
+                    w={['100%','350px','350px','350px']}
+                    src={offer.photos[0]}
+                    alt="Caffe Latte"
+                  />
+
+                </Box>
 
                 <Stack>
                   <CardBody>
