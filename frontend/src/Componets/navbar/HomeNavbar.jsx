@@ -206,7 +206,7 @@ const HomeNavbar = () => {
                   </Box>
                   <Box bg={"black"} borderRadius={"full"}>
                     <Text pl={2} pr={2} color={"white"}>
-                      {user?.name.charAt(0)}
+                      {user?.name.charAt(0).toUpperCase()}
                     </Text>
                   </Box>
                 </Flex>

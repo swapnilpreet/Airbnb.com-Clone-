@@ -32,11 +32,14 @@ import {
   DeleteAirbnbHome,
   EditAirbnbHome,
   GetAirbnbHomeById,
+  GetUserHome,
 } from "../../ApiCalls/home";
 import { BiSolidHomeHeart } from "react-icons/bi";
 import { useNavigate, useParams } from "react-router-dom";
 import PhotosUploader from "../../Componets/PhotosUploader";
 import Amenties from "../../Componets/Amenties";
+import { useDispatch, useSelector } from "react-redux";
+import { SetUserHome } from "../../Redux/HomeSlice";
 
 const countries = [
   { value: "Camping", text: "Camping" },
@@ -66,7 +69,6 @@ const options = countries.map((option) => {
   return <option value={option.value}>{option.text}</option>;
 });
 
-
 const ratings = [
   { value: "1.0", text: "1.0" },
   { value: "2.0", text: "2.0" },
@@ -88,21 +90,24 @@ const ratingoptions = ratings.map((option) => {
   return <option value={option.value}>{option.text}</option>;
 });
 
-
 const region = [
   { value: "Asia", text: "Asia" },
   { value: "United states", text: "United states" },
   { value: "Indonesia", text: "Indonesia" },
   { value: "Europe", text: "Europe" },
-  { value: "United kingdom", text: "United kingdom"},
+  { value: "United kingdom", text: "United kingdom" },
 ];
 
 const regionoptions = region.map((option) => {
   return <option value={option.value}>{option.text}</option>;
 });
 
-const GetmyHomes = ({ myhome, getHomesData }) => {
-  // const { id } = useParams();
+const GetmyHomes = () => {
+  const {userHomes} = useSelector(state =>state?.homes);
+  const dispatch=useDispatch();
+  const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const navigate = useNavigate();
   const [Category, setCategory] = useState("");
   const [title, setTitle] = useState("");
   const [address, setAddress] = useState("");
@@ -115,17 +120,28 @@ const GetmyHomes = ({ myhome, getHomesData }) => {
   const [region, setregion] = useState("");
   const [rating, setrating] = useState("");
   const [maxGuests, setMaxGuests] = useState(1);
-  const [ids, setids] = useState("")
+  const [ids, setids] = useState("");
   const [price, setPrice] = useState(0);
-  const toast = useToast();
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const navigate=useNavigate()
+
+
+  const getHomesData = async () => {
+    try {
+      const response = await GetUserHome();
+      if (response.success) {
+        dispatch(SetUserHome(response.data));
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
 
   const handleEditHome = async (id) => {
     try {
-      setids(id)
+      setids(id);
       const response = await GetAirbnbHomeById(id);
-      if (response.success){
+      if (response.success) {
         setCategory(response.data.Category);
         setTitle(response.data.title);
         setAddress(response.data.address);
@@ -147,7 +163,7 @@ const GetmyHomes = ({ myhome, getHomesData }) => {
 
   const HandleEditHome = async () => {
     const placeData = {
-      id:ids,
+      id: ids,
       Category,
       title,
       address,
@@ -214,69 +230,73 @@ const GetmyHomes = ({ myhome, getHomesData }) => {
 
   return (
     <Box>
-      {myhome.filter(offer => offer.status!=='pending').length !== 0 ? (
+      {userHomes.filter((offer) => offer.status !== "pending").length !== 0 ? (
         <>
-        {myhome
-        .filter((offer) => offer.status !== "pending")
-        .map((offer, index) => (
-          <Card
-            key={index}
-            direction={{ base: "column", sm: "row" }}
-            overflow="hidden"
-            variant="outline"
-            mb={2}
-          >
-            <Image
-              objectFit="cover"
-              maxW={{ base: "100%", sm: "200px" }}
-              src={offer.photos[0]}
-              alt="Caffe Latte"
-            />
+          {userHomes
+            .filter((offer) => offer.status !== "pending")
+            .map((offer, index) => (
+              <Card
+                key={index}
+                direction={{ base: "column", sm: "row" }}
+                overflow="hidden"
+                variant="outline"
+                mb={2}
+              >
+                <Image
+                  objectFit="cover"
+                  maxW={{ base: "100%", sm: "200px" }}
+                  src={offer.photos[0]}
+                  alt="Caffe Latte"
+                />
 
-            <Stack>
-              <CardBody>
-                <Heading size="md">{offer.title}</Heading>
-                <Text>{offer.address}</Text>
-                <Flex gap={10} py={2}>
-                  <Text>{offer.region}</Text>
-                  <Text>{offer.Category}</Text>
-                </Flex>
-              </CardBody>
+                <Stack>
+                  <CardBody>
+                    <Heading size="md">{offer.title}</Heading>
+                    <Text>{offer.address}</Text>
+                    <Flex gap={10} py={2}>
+                      <Text>{offer.region}</Text>
+                      <Text>{offer.Category}</Text>
+                    </Flex>
+                  </CardBody>
 
-              <CardFooter>
-                <Flex gap={10}>
-                  <Button
-                    variant="solid"
-                    colorScheme="red"
-                    onClick={() => handleDelete(offer._id)}
-                  >
-                    Delete
-                  </Button>
-                  <Button
-                    variant="solid"
-                    colorScheme="green"
-                    onClick={onOpen}
-                  >
-                    <Text onClick={() => handleEditHome(offer._id)}>Edit</Text>
-                  </Button>
-                </Flex>
-              </CardFooter>
-            </Stack>
-          </Card>
-        ))}
+                  <CardFooter>
+                    <Flex gap={10}>
+                      <Button
+                        variant="solid"
+                        colorScheme="red"
+                        onClick={() => handleDelete(offer._id)}
+                      >
+                        Delete
+                      </Button>
+                      <Button
+                        variant="solid"
+                        colorScheme="green"
+                        onClick={onOpen}
+                      >
+                        <Text onClick={() => handleEditHome(offer._id)}>
+                          Edit
+                        </Text>
+                      </Button>
+                    </Flex>
+                  </CardFooter>
+                </Stack>
+              </Card>
+            ))}
         </>
-        ):(
-          <>
-             <Heading py={2}>My Homes</Heading>
-             <Divider/>
-             <Text py={2}>No Approved Homes</Text>
-             <Text fontSize={'xs'} py={2}>Admin Not Approve your Homes or else you din't add any home yet!</Text>
-             <Button variant={'outline'} onClick={()=>navigate('/')}>Start Searching</Button>
-             <Divider mt={2}/>
-          </>
-        )}
-
-      
+      ) : (
+        <>
+          <Heading py={2}>My Homes</Heading>
+          <Divider />
+          <Text py={2}>No Approved Homes</Text>
+          <Text fontSize={"xs"} py={2}>
+            Admin Not Approve your Homes or else you din't add any home yet!
+          </Text>
+          <Button variant={"outline"} onClick={() => navigate("/")}>
+            Start Searching
+          </Button>
+          <Divider mt={2} />
+        </>
+      )}
 
       {/* Edit model */}
       <Modal isOpen={isOpen} onClose={onClose}>

@@ -6,10 +6,13 @@ import AddHome from "./AddHome";
 import GetmyHomes from "./GetmyHomes";
 import { GetUserHome } from "../../ApiCalls/home";
 import PendingHomes from "./PendingHomes";
+import { useDispatch } from "react-redux";
+import { SetUserHome } from "../../Redux/HomeSlice";
 
 const UserHomes = () => {
   const [showHomes, setshowHomes] = useState(true);
-  const [myhome, setmyhome] = useState([]);
+  const dispatch = useDispatch();
+
 
   const getHomesData = async () => {
     try {
@@ -17,7 +20,7 @@ const UserHomes = () => {
       if (response.success) {
         if (response.data.length > 0) {
           setshowHomes(false);
-          setmyhome(response.data);
+          dispatch(SetUserHome(response.data));
         }
       } else {
         throw new Error(response.message);
@@ -31,6 +34,7 @@ const UserHomes = () => {
     getHomesData();
   }, []);
 
+  
   return (
     <>
       <PagesNavbar />
@@ -43,13 +47,13 @@ const UserHomes = () => {
           </TabList>
           <TabPanels>
             <TabPanel>
-              <AddHome getHomesData={getHomesData}/>
+              <AddHome/>
             </TabPanel>
             <TabPanel>
-              <GetmyHomes myhome={myhome} getHomesData={getHomesData}/>
+              <GetmyHomes/>
             </TabPanel>
             <TabPanel>
-              <PendingHomes myhome={myhome} setshowHomes={setshowHomes}/>
+              <PendingHomes/>
             </TabPanel>
           </TabPanels>
         </Tabs>

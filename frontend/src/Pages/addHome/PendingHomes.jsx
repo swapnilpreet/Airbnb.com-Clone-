@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   Box,
@@ -19,15 +19,20 @@ import {
 import { DeleteAirbnbHome, GetUserHome } from "../../ApiCalls/home";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
+import { useDispatch, useSelector } from "react-redux";
+import { SetUserHome } from "../../Redux/HomeSlice";
 
-const PendingHomes = ({ myhome, setmyhome }) => {
+const PendingHomes = () => {
+  const {userHomes} = useSelector(state =>state?.homes);
+  const dispatch= useDispatch();
   const navigate = useNavigate();
   const toast = useToast();
+
   const getData = async () => {
     try {
       const response = await GetUserHome();
       if (response.success) {
-        setmyhome(response.data);
+        dispatch(SetUserHome(response.data));
       } else {
         throw new Error(response.message);
       }
@@ -47,7 +52,7 @@ const PendingHomes = ({ myhome, setmyhome }) => {
           duration: 1000,
           isClosable: true,
         });
-        navigate('/airbnb-your-home');
+        getData();
       } else {
         throw new Error(response.message);
       }
@@ -68,9 +73,9 @@ const PendingHomes = ({ myhome, setmyhome }) => {
 
   return (
     <Box>
-      {myhome.filter((offer) => offer.status === "pending").length !== 0 ? (
+      {userHomes.filter((offer) => offer.status === "pending").length !== 0 ? (
         <>
-          {myhome
+          {userHomes
             .filter((offer) => offer.status === "pending")
             .map((offer, index) => (
               <Card

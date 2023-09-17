@@ -18,6 +18,7 @@ export const HomeSlice = createSlice({
     initialState:{
         homes:[],
         singleHome:[],
+        userHomes:[],
     },
     reducers:{
         SetHomes:(state,action)=>{
@@ -25,8 +26,12 @@ export const HomeSlice = createSlice({
         },
         SetSingleHome:(state,action)=>{
             state.singleHome= action.payload
+        },
+        SetUserHome:(state,action)=>{
+            state.userHomes= action.payload
         }
+
     }
 })
 
-export const {SetHomes,SetSingleHome}=HomeSlice.actions;
+export const {SetHomes,SetUserHome,SetSingleHome}=HomeSlice.actions;

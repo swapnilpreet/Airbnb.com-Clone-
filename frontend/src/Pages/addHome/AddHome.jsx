@@ -17,8 +17,7 @@ import {
   Textarea,
   useToast,
 } from "@chakra-ui/react";
-import { axiosInstance } from "../../ApiCalls/axiosinstance";
-import { AddAirbnbHome, EditAirbnbHome } from "../../ApiCalls/home";
+import { AddAirbnbHome } from "../../ApiCalls/home";
 import Amenties from "../../Componets/Amenties";
 import { BiSolidHomeHeart } from "react-icons/bi";
 
@@ -83,8 +82,8 @@ const regionoptions = region.map((option) => {
   return <option value={option.value}>{option.text}</option>;
 });
 
-const AddHome = ({getHomesData}) => {
-  const toast = useToast()
+const AddHome = ({ getHomesData }) => {
+  const toast = useToast();
   const [Category, setCategory] = useState("");
   const [title, setTitle] = useState("");
   const [address, setAddress] = useState("");
@@ -116,15 +115,29 @@ const AddHome = ({getHomesData}) => {
       maxGuests,
       price,
     };
+    
     try {
       const response = await AddAirbnbHome(placeData);
       if (response.success) {
         toast({
-          title: 'Home created.',
-          status: 'success',
+          title: "Home created.",
+          status: "success",
           duration: 2000,
           isClosable: true,
-        })
+        });
+        setCategory("");
+        setTitle("");
+        setAddress("");
+        setDesc("");
+        setAddedPhotos([]);
+        setamenities([]);
+        setExtraInfo("");
+        setCheckIn("");
+        setCheckOut("");
+        setMaxGuests(1);
+        setregion("");
+        setrating("");
+        setPrice(0);
         getHomesData();
         const myTimeout = setTimeout(myGreeting, 5000);
         function myGreeting() {
@@ -138,10 +151,10 @@ const AddHome = ({getHomesData}) => {
     } catch (error) {
       toast({
         title: error.message,
-        status: 'error',
+        status: "error",
         duration: 2000,
         isClosable: true,
-      })
+      });
     }
   };
 
