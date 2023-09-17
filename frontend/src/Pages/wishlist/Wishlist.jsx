@@ -3,7 +3,6 @@ import PagesNavbar from "../../Componets/navbar/PagesNavbar";
 import { Box, Text } from "@chakra-ui/react";
 import Card from "./Card";
 import Layout from "../../Componets/Layout";
-
 const Wishlist = () => {
   return (
     <Box>

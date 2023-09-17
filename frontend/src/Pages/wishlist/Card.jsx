@@ -72,7 +72,7 @@ export default function Card() {
   const { loading } = useSelector((state) => state.loaders);
   const navigate = useNavigate();
   const [wishlist, setwishlist] = useState([])
-
+  console.log(wishlist)
   const handleWishlist = async (id) => {
     try {
       const response = await AddtoWishlist({ prodId: id });
@@ -111,7 +111,7 @@ export default function Card() {
 
   return (
      <>
-     {wishlist.length !== '0' ? (
+     {wishlist.length !== 0 ? (
       <SimpleGrid row={"auto"} columns={[1, 2, 3, 3]} spacing="40px">
       {wishlist.map((item) => (
         <Box
@@ -194,12 +194,7 @@ export default function Card() {
     </SimpleGrid>
      ):(
         <>
-        <Heading py={2}>Pending Homes</Heading>
-        <Divider />
-        <Text py={2}>No Pending Homes</Text>
-        <Text fontSize={"xs"} py={2}>
-          Admin Approved your All Homes or else you din't add any home yet!
-        </Text>
+        <Text py={2}>No Wishlist Homes</Text>
         <Button variant={"outline"} onClick={() => navigate("/")}>
           Start Searching
         </Button>
