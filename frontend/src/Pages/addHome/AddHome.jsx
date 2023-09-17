@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Perks from "../../Componets/Amenties";
 import PhotosUploader from "../../Componets/PhotosUploader";
 
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Box,
   Button,
@@ -17,9 +17,11 @@ import {
   Textarea,
   useToast,
 } from "@chakra-ui/react";
-import { AddAirbnbHome } from "../../ApiCalls/home";
+import { AddAirbnbHome, GetUserHome } from "../../ApiCalls/home";
 import Amenties from "../../Componets/Amenties";
 import { BiSolidHomeHeart } from "react-icons/bi";
+import { SetUserHome } from "../../Redux/HomeSlice";
+import { useDispatch } from "react-redux";
 
 const countries = [
   { value: "Camping", text: "Camping" },
@@ -82,7 +84,7 @@ const regionoptions = region.map((option) => {
   return <option value={option.value}>{option.text}</option>;
 });
 
-const AddHome = ({ getHomesData }) => {
+const AddHome = () => {
   const toast = useToast();
   const [Category, setCategory] = useState("");
   const [title, setTitle] = useState("");
@@ -97,6 +99,21 @@ const AddHome = ({ getHomesData }) => {
   const [region, setregion] = useState("");
   const [rating, setrating] = useState("");
   const [price, setPrice] = useState(0);
+  const Navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const getHomesData = async () => {
+    try {
+      const response = await GetUserHome();
+      if (response.success) {
+        dispatch(SetUserHome(response.data));
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
 
   const savePlace = async (e) => {
     e.preventDefault();
@@ -139,6 +156,8 @@ const AddHome = ({ getHomesData }) => {
         setrating("");
         setPrice(0);
         getHomesData();
+        Navigate('/');
+
         const myTimeout = setTimeout(myGreeting, 5000);
         function myGreeting() {
           alert(
@@ -174,7 +193,6 @@ const AddHome = ({ getHomesData }) => {
           <FormHelperText color={"gray.500"}>
             Should be short and catchy as in advertisement
           </FormHelperText>
-
           {/* Address */}
           <FormLabel mt={4} color={"gray.500"}>
             Address of your Home
