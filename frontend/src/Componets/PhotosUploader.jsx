@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import axiosInstance from '../utils/axios';
 import Images from './Images';
 import { Box, Button, Flex, Image, Input, SimpleGrid, Text } from '@chakra-ui/react';
 import {BiSolidCloudUpload} from 'react-icons/bi'
 import {RxCross2} from 'react-icons/rx'
-import {AiFillHeart, AiOutlineHeart} from 'react-icons/ai'
+import {AiOutlineHeart} from 'react-icons/ai'
 import fillheart from '../Accests/heart-red.png'
+import { axiosInstance } from '../ApiCalls/axiosinstance';
+
 // AiOutlineHeart
+
 const PhotosUploader = ({ addedPhotos, setAddedPhotos }) => {
   const [photoLink, setphotoLink] = useState('');
 

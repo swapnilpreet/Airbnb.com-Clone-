@@ -16,6 +16,7 @@ var cors = require('cors');
 
 const whiteList = [
      'http://localhost:3000',
+     'https://airbnb-india-com.onrender.com',
 ];
 
    
@@ -32,6 +33,8 @@ app.use(
        exposedHeaders: ['set-cookie'],
      })
    );
+
+   
 
 // cloudinary configuration
 cloudinary.config({
