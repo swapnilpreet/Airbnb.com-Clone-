@@ -27,8 +27,11 @@ const Home = () => {
   const { user } = useSelector((state) => state?.users);
   const { homes } = useSelector((state) => state?.homes);
   const { region } = useSelector((state) => state?.region);
+  const category= useSelector((state)=>state?.region.category);
   const { loading } = useSelector((state) => state.loaders);
-  console.log(loading)
+  
+  const toast = useToast();
+
   const dispatch = useDispatch();
 
   const handleWishlist = async (id) => {
@@ -41,28 +44,40 @@ const Home = () => {
         throw new Error("Failed to add wihlist");
       }
     } catch (error) {
-      console.log(error.message);
+      toast({
+        title: "Error Occured in Update User Status",
+        description: error.message,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
   };
 
   const getData1 = async () => {
     try {
-      const response = await GetAllHome({ region: region });
+      const response = await GetAllHome({Category:category, region: region });
       if (response.success){
         dispatch(SetHomes(response.data));
       } else {
         throw new Error(response.message);
       }
     } catch (error) {
-      console.error(error.message);
+      toast({
+        title: "Error Occured in get Data 1",
+        description: error.message,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
   };
 
   const getData = async () => {
     try {
       dispatch(SetLoader(true));
-      const response = await GetAllHome({ region: region });
-      if (response.success){
+      const response = await GetAllHome({Category:category, region: region});
+      if(response.success){
         dispatch(SetHomes(response.data));
         setTimeout(() => {
           dispatch(SetLoader(false));
@@ -74,7 +89,13 @@ const Home = () => {
       setTimeout(() => {
         dispatch(SetLoader(false));
       }, 3000);
-      console.error(error.message);
+      toast({
+        title: "Error Occured in get Data",
+        description: error.message,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
   };
 
@@ -87,14 +108,21 @@ const Home = () => {
         throw new Error(response.message);
       }
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
+      toast({
+        title: "Error Occured in get User",
+        description: error.message,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
   };
 
   useEffect(() => {
     getData();
     getuser();
-  }, [region]);
+  }, [region,category]);
 
   return (
     <>
@@ -122,7 +150,7 @@ const Home = () => {
                     noOfLines={2}
                     spacing="2"
                     skeletonHeight="5"
-                    fitContent
+                    
                   >
                     <Flex justifyContent={"space-between"} p={2}>
                       <Box>

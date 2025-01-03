@@ -14,6 +14,7 @@ import {
   Stack,
   Text,
   Tooltip,
+  useToast,
 } from "@chakra-ui/react";
 import moment from "moment";
 import { Cancelbooking, Getuserbooking } from "../../ApiCalls/booking";
@@ -21,6 +22,7 @@ import { useNavigate } from "react-router-dom";
 import { MdDoneAll } from "react-icons/md";
 
 const Trips = () => {
+  const toast = useToast();
   const [booking, setbooking] = useState([]);
   const Navigate = useNavigate();
 
@@ -33,7 +35,13 @@ const Trips = () => {
         throw new Error(response.message);
       }
     } catch (error) {
-      console.log(error.message);
+      toast({
+        title: "Error Occured in get user Booking",
+        description: error.message,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
   };
 
@@ -46,7 +54,13 @@ const Trips = () => {
         throw new Error(response.message);
       }
     } catch (error) {
-      console.log(error.message);
+      toast({
+        title: "Error Occured in Cancel booking",
+        description: error.message,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
   };
 

@@ -54,11 +54,11 @@ const Rating = [
   { value: "5.0", text: "5.0" },
 ];
 
-const ratingoption = Rating.map((option) => {
-  return <option value={option.value}>{option.text}</option>;
+const ratingoption = Rating.map((option,index) => {
+  return <option key={index} value={option.value}>{option.text}</option>;
 });
 
-const Review = ({ singlehome }) => {
+const Review = ({ singleHome }) => {
   const { user } = useSelector((state) => state.users);
   const [rating, setrating] = useState("");
   const [ids, setids] = useState("");
@@ -68,8 +68,7 @@ const Review = ({ singlehome }) => {
   const addModel = useDisclosure();
 
   const [ReviewsData, setReviewData] = useState([]);
-
-   console.log(ReviewsData)
+ 
   const handleAddReview = async (id) => {
     try {
       const response = await AddReview(id, {
@@ -77,18 +76,27 @@ const Review = ({ singlehome }) => {
         comment: comment,
       });
       if (response.success) {
-        getReviews(singlehome?._id);
+        getReviews(singleHome?._id);
         toast({
-          title: response.message,
+          title: "Review added successfully",
+          description: response.message,
           status: "success",
           duration: 2000,
           isClosable: true,
         });
         setrating("");
         setcomment("");
+      }else{
+        throw new Error(response.message);
       }
     } catch (error) {
-      console.log(error.message);
+      toast({
+        title: "Error Occured in adding review",
+        description: error.message,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
   };
 
@@ -97,15 +105,24 @@ const Review = ({ singlehome }) => {
       const response = await DeleteReviewById(id);
       if (response.success) {
         toast({
-          title: response.message,
+          title: "Review deleted successfully",
+          description: response.message,
           status: "success",
-          duration: 2000,
+          duration: 1000,
           isClosable: true,
         });
-        getReviews(singlehome?._id);
+        getReviews(singleHome?._id);
+      }else{
+        throw new Error(response.message);
       }
     } catch (error) {
-      console.log(error.message);
+      toast({
+        title: "Error Occured in Delete review",
+        description: error.message,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
   };
 
@@ -116,13 +133,28 @@ const Review = ({ singlehome }) => {
         comment,
       });
       if (response.success) {
+        toast({
+          title: "Review updated successfully",
+          description: response.message,
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+        });
         setrating("");
         setcomment("");
         setids("");
-        getReviews(singlehome?._id);
+        getReviews(singleHome?._id);
+      }else{
+        throw new Error(response.message);
       }
     } catch (error) {
-      console.log(error);
+      toast({
+        title: "Error Occured in updated review",
+        description: error.message,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
   };
 
@@ -133,7 +165,13 @@ const Review = ({ singlehome }) => {
       setrating(response.data.rating);
       setcomment(response.data.comment);
     } catch (error) {
-      console.log(error.message);
+      toast({
+        title: "Error Occured in Get Review By Id",
+        description: error.message,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
   };
 
@@ -146,13 +184,24 @@ const Review = ({ singlehome }) => {
         throw new Error(response.message);
       }
     } catch (error) {
-      console.log(error.message);
+      toast({
+        title: "Error Occured in Get Reviews",
+        description: error.message,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
   };
 
+
   useEffect(() => {
-    getReviews(singlehome?._id);
-  }, [singlehome]);
+    if(singleHome){
+      getReviews(singleHome?._id);
+    }
+  },[singleHome]);
+
+  console.log("ReviewsData",ReviewsData)
 
   return (
     <Box pt={2}>
@@ -168,13 +217,13 @@ const Review = ({ singlehome }) => {
               <Box>
                 <BiSolidStar size={20} />
               </Box>
-              <Box>{singlehome?.rating}</Box>
+              <Box>{singleHome?.rating}</Box>
               <Box>Reviews</Box>
               <Box>{ReviewsData?.length}</Box>
             </Flex>
           </Box>
           <Box>
-            {singlehome?.owner._id !== user?._id ? (
+            {singleHome?.owner._id !== user?._id ? (
               <Box>
                 <Button onClick={addModel.onOpen}>Add Reviews</Button>
               </Box>
@@ -188,7 +237,7 @@ const Review = ({ singlehome }) => {
           <Box h={"300px"} width={"100%"} overflow={"scroll"}>
             <SimpleGrid columns={[1, 1, 2, 2]} spacing={10} m={2}>
               {ReviewsData?.map((item, index) => (
-                <>
+                 
                   <Box key={index}>
                     <Card>
                       <CardHeader>
@@ -204,14 +253,14 @@ const Review = ({ singlehome }) => {
                               src="https://bit.ly/sage-adebayo"
                             />
                             <Box>
-                              <Heading size="sm">{item?.user.name}</Heading>
-                              <Text>{item?.user.role}, Airbnb</Text>
+                              <Heading size="sm">{item?.user?.name}</Heading>
+                              <Text>{item?.user?.role}, Airbnb</Text>
                             </Box>
                           </Flex>
 
                           <>
                             <Menu>
-                              {item?.user._id === user?._id ? (
+                              {item?.user?._id === user?._id ? (
                                 <MenuButton
                                   as={Button}
                                   variant="ghost"
@@ -249,7 +298,7 @@ const Review = ({ singlehome }) => {
                       </CardBody>
                     </Card>
                   </Box>
-                </>
+                
               ))}
             </SimpleGrid>
           </Box>
@@ -327,7 +376,7 @@ const Review = ({ singlehome }) => {
                   onChange={(e) => setcomment(e.target.value)}
                   type="text"
                 />
-                <Button mt={4} onClick={() => handleAddReview(singlehome?._id)}>
+                <Button mt={4} onClick={() => handleAddReview(singleHome?._id)}>
                   <Text onClick={addModel.onClose}>Add Review</Text>
                 </Button>
               </Flex>

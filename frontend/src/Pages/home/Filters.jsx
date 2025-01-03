@@ -1,4 +1,4 @@
-import { Box, Flex, Text } from '@chakra-ui/react'
+import { Box, Flex, Text, useToast } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { AiOutlineAntDesign } from 'react-icons/ai'
 import { BiSolidHomeSmile, BiSolidParking } from 'react-icons/bi'
@@ -12,14 +12,19 @@ import { GetAllHome } from '../../ApiCalls/home'
 import { useDispatch, useSelector } from 'react-redux'
 import { SetHomes } from '../../Redux/HomeSlice'
 import { SetLoader } from '../../Redux/LoadingSlice'
+import { SetCategory } from '../../Redux/RegionSlice'
 
 const Filters = () => {
+    const toast = useToast();
     const dispatch = useDispatch();
     const {region} = useSelector((state)=>state.region);
 
+
+   
     const getFilterData=async(filters)=>{
         try {
             dispatch(SetLoader(true));
+            dispatch(SetCategory(filters));
             const response = await GetAllHome({Category:filters,region:region});
             if (response.success) {
                 setTimeout(() => {
@@ -33,10 +38,15 @@ const Filters = () => {
             setTimeout(() => {
                 dispatch(SetLoader(false));
             }, 3000);
-            console.log(error);
+            toast({
+                title: "Error Occured in get Filter Data",
+                description: error.message,
+                status: "error",
+                duration: 2000,
+                isClosable: true,
+              });
         }
     }
-
   return (
     <Box pl={10} pr={10} pt={4}>
          <Box>

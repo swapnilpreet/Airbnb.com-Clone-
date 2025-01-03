@@ -43,7 +43,7 @@ const Amenties = ({ selected, onChange }) => {
     <Box>
         <SimpleGrid columns={[2,3,3,5]}>
           {amenities.map((options,index)=>(
-              <Box border={'1px solid gray'} bg={'gray.100'} borderRadius={"2xl"} m={2}>
+              <Box key={index} border={'1px solid gray'} bg={'gray.100'} borderRadius={"2xl"} m={2}>
                 <Flex gap={2} alignItems={'center'}  alignContent={'center'} p={'20px'} justifyContent={'start'}>
                   <input
                     key={index}

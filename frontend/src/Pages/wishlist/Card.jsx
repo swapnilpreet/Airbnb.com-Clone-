@@ -14,56 +14,9 @@ import {
 } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { AiOutlineHeart } from "react-icons/ai";
 import { AddtoWishlist, GetAllWislistProducts } from "../../ApiCalls/wishlist";
 import { useEffect, useState } from "react";
 import redheart from '../../Accests/heart-red.png';
-
-// const data = [
-//   {
-//     name: " Nice Chair, pink",
-//     price: "$57",
-//     image:
-//       "https://images.unsplash.com/photo-1499887142886-791eca5918cd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHVzZXJ8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60",
-//   },
-//   {
-//     name: " Nice Chair, pink",
-//     price: "$57",
-//     image:
-//       "https://images.unsplash.com/photo-1499887142886-791eca5918cd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHVzZXJ8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60",
-//   },
-//   {
-//     name: " Nice Chair, pink",
-//     price: "$57",
-//     image:
-//       "https://images.unsplash.com/photo-1499887142886-791eca5918cd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHVzZXJ8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60",
-//   },
-//   {
-//     name: " Nice Chair, pink",
-//     price: "$57",
-//     image:
-//       "https://images.unsplash.com/photo-1499887142886-791eca5918cd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHVzZXJ8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60",
-//   },
-//   {
-//     name: " Nice Chair, pink",
-//     price: "$57",
-//     image:
-//       "https://images.unsplash.com/photo-1499887142886-791eca5918cd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHVzZXJ8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60",
-//   },
-//   {
-//     name: " Nice Chair, pink",
-//     price: "$57",
-//     image:
-//       "https://images.unsplash.com/photo-1499887142886-791eca5918cd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHVzZXJ8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60",
-//   },
-//   {
-//     name: " Nice Chair, pink",
-//     price: "$57",
-//     image:
-//       "https://images.unsplash.com/photo-1499887142886-791eca5918cd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHVzZXJ8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60",
-//   },
-// ];
-
 
 
 
@@ -72,7 +25,7 @@ export default function Card() {
   const { loading } = useSelector((state) => state.loaders);
   const navigate = useNavigate();
   const [wishlist, setwishlist] = useState([])
-  console.log(wishlist)
+
   const handleWishlist = async (id) => {
     try {
       const response = await AddtoWishlist({ prodId: id });
@@ -88,7 +41,13 @@ export default function Card() {
         throw new Error("Failed to add wihlist");
       }
     } catch (error) {
-      console.log(error.message);
+      toast({
+        title: "Error Occured in adding wihlist",
+        description: error.message,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
   };
 
@@ -98,10 +57,16 @@ export default function Card() {
       if (response.success) {
         setwishlist(response.data.wishlist);
       } else {
-        throw new Error("Couldn't get wishlist products");
+        throw new Error("Couldn't get wishlist Homes");
       }
     } catch (error) {
-      console.log(error.message);
+      toast({
+        title: "Error Occured in geting wishlist Homes",
+        description: error.message,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
   }
 
@@ -112,9 +77,10 @@ export default function Card() {
   return (
      <>
      {wishlist.length !== 0 ? (
-      <SimpleGrid row={"auto"} columns={[1, 2, 3, 3]} spacing="40px">
+      <SimpleGrid row={"auto"} columns={[1, 2, 2, 3]} spacing="40px" >
       {wishlist.map((item) => (
         <Box
+          
           role={"group"}
           p={6}
           maxW={"330px"}
@@ -124,6 +90,7 @@ export default function Card() {
           pos={"relative"}
           zIndex={1}
           mt={20}
+          // ml={10}
          
         >
           <Box

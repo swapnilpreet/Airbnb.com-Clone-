@@ -22,9 +22,10 @@ import {
   SkeletonText,
   Text,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import Layout from "../../Componets/Layout";
-import { AiFillHeart, AiFillStar, AiOutlineHeart } from "react-icons/ai";
+import {  AiFillStar, AiOutlineHeart } from "react-icons/ai";
 import {
   BiDish,
   BiShareAlt,
@@ -75,37 +76,45 @@ const SinglePage = () => {
   const { id } = useParams();
   const { user } = useSelector((state) => state.users);
   const { loading } = useSelector((state) => state.loaders);
+  // const {singleHome} = useSelector((state) =>state.homes);
   const dispatch = useDispatch();
-  const [singlehome, setsinglehome] = useState();
+  const [singleHome, setsinglehome] = useState();
   const [show, setshow] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const imageModel = useDisclosure();
+  const toast = useToast();
 
-  console.log(singlehome);
+  console.log("singleHome",singleHome)
 
   const gethomesbyId = async (id) => {
     try {
       dispatch(SetLoader(true));
       const response = await GetAirbnbHomeById(id);
-      if (response.success) {
+      if(response.success){
+        setsinglehome(response.data);
         setTimeout(() => {
           dispatch(SetLoader(false));
         }, 3000);
-        setsinglehome(response.data);
-      } else {
+      }else{
         throw new Error(response.message);
       }
     } catch (error) {
-      setTimeout(() => {
+      setTimeout(()=>{
         dispatch(SetLoader(false));
       }, 3000);
-      console.log(error);
+      toast({
+        title: "Error Occured in Get Airbnb Home By Id",
+        description: error.message,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
   };
 
   useEffect(() => {
-    gethomesbyId(id);
-  }, [id]);
+      gethomesbyId(id);
+  }, []);
 
   return (
     <>
@@ -114,7 +123,7 @@ const SinglePage = () => {
         <Box>
           <Skeleton fitContent isLoaded={!loading}>
             <Box fontSize={"2xl"} fontWeight={"bold"}>
-              <Text>{singlehome?.title}</Text>
+              <Text>{singleHome?.title}</Text>
             </Box>
           </Skeleton>
 
@@ -149,13 +158,13 @@ const SinglePage = () => {
                       <BiStar />
                     </Box>
                     <Box>
-                      <Text>{singlehome?.rating}</Text>
+                      <Text>{singleHome?.rating}</Text>
                     </Box>
                   </Flex>
 
                   <Flex alignItems={"center"} gap={1}>
                     <IoLocation />
-                    <Text decoration={"underline"}>{singlehome?.address}</Text>
+                    <Text decoration={"underline"}>{singleHome?.address}</Text>
                   </Flex>
                 </Flex>
               </Box>
@@ -175,7 +184,7 @@ const SinglePage = () => {
 
                   <Flex alignItems={"center"} gap={1}>
                     <Box>
-                      {user?.wishlist.includes(singlehome?._id) ? (
+                      {user?.wishlist.includes(singleHome?._id) ? (
                         <>
                           <Image boxSize={"20px"} src={redheart}></Image>
                         </>
@@ -193,7 +202,7 @@ const SinglePage = () => {
           </Flex>
 
           <Show below="md">
-            <ImageSlider singlehome={singlehome} />
+            <ImageSlider singlehome={singleHome} />
           </Show>
 
           <Hide below="md">
@@ -209,7 +218,7 @@ const SinglePage = () => {
                       boxSize="504px"
                       w="full"
                       objectFit={"cover"}
-                      src={singlehome?.photos[0]}
+                      src={singleHome?.photos[0]}
                     ></Image>
                     </Skeleton>
                   </GridItem>
@@ -224,7 +233,7 @@ const SinglePage = () => {
                       boxSize="250px"
                       w="full"
                       objectFit={"cover"}
-                      src={singlehome?.photos[1]}
+                      src={singleHome?.photos[1]}
                     ></Image>
                     </Skeleton>
                   </GridItem>
@@ -239,7 +248,7 @@ const SinglePage = () => {
                       boxSize="250px"
                       w="full"
                       objectFit={"cover"}
-                      src={singlehome?.photos[2]}
+                      src={singleHome?.photos[2]}
                     ></Image>
                     </Skeleton>
                   </GridItem>
@@ -254,7 +263,7 @@ const SinglePage = () => {
                       boxSize="250px"
                       w="full"
                       objectFit={"cover"}
-                      src={singlehome?.photos[3]}
+                      src={singleHome?.photos[3]}
                     ></Image>
                     </Skeleton>
                   </GridItem>
@@ -269,7 +278,7 @@ const SinglePage = () => {
                       boxSize="250px"
                       w="full"
                       objectFit={"cover"}
-                      src={singlehome?.photos[4]}
+                      src={singleHome?.photos[4]}
                     ></Image>
                     </Skeleton>
                   </GridItem>
@@ -292,11 +301,11 @@ const SinglePage = () => {
                 <ModalCloseButton />
                 <ModalBody>
                   <Box>
-                    <Image src={singlehome?.photos[0]} w={"full"} mb={2} />
-                    <Image src={singlehome?.photos[1]} w={"full"} mb={2} />
-                    <Image src={singlehome?.photos[2]} w={"full"} mb={2} />
-                    <Image src={singlehome?.photos[3]} w={"full"} mb={2} />
-                    <Image src={singlehome?.photos[4]} w={"full"} mb={2} />
+                    <Image src={singleHome?.photos[0]} w={"full"} mb={2} />
+                    <Image src={singleHome?.photos[1]} w={"full"} mb={2} />
+                    <Image src={singleHome?.photos[2]} w={"full"} mb={2} />
+                    <Image src={singleHome?.photos[3]} w={"full"} mb={2} />
+                    <Image src={singleHome?.photos[4]} w={"full"} mb={2} />
                   </Box>
                 </ModalBody>
               </ModalContent>
@@ -309,13 +318,13 @@ const SinglePage = () => {
                 <Skeleton fitContent isLoaded={!loading}>
                   <Box>
                     <Text fontSize={"xl"} fontWeight={"semibold"}>
-                      Room in a nature hosted by {singlehome?.owner.name}
+                      Room in a nature hosted by {singleHome?.owner.name}
                     </Text>
 
                     <Text fontSize={"xs"}>
-                      {singlehome?.maxGuests}+guests.{" "}
-                      {singlehome?.maxGuests * 2} bedrooms .
-                      {singlehome?.maxGuests * 3} beds
+                      {singleHome?.maxGuests}+guests.{" "}
+                      {singleHome?.maxGuests * 2} bedrooms .
+                      {singleHome?.maxGuests * 3} beds
                     </Text>
                   </Box>
                 </Skeleton>
@@ -376,7 +385,7 @@ const SinglePage = () => {
               <Skeleton fitContent isLoaded={!loading}>
                 <Box mt={5} p={2}>
                   <Collapse startingHeight={70} fontSize={'xs'} in={show}>
-                    {singlehome?.description}
+                    {singleHome?.description}
                   </Collapse>
 
                   <Flex
@@ -405,7 +414,7 @@ const SinglePage = () => {
                         borderRadius={5}
                         boxSize={["300px", "300px", "300px", "250px"]}
                         w={["100%", "100%", "60%", "60%"]}
-                        src={singlehome?.photos[4]}
+                        src={singleHome?.photos[4]}
                       ></Image>
                     </Box>
                   </Box>
@@ -467,6 +476,7 @@ const SinglePage = () => {
                         </Flex>
                       </Box>
                     </Skeleton>
+
                   </SimpleGrid>
                   
                 </Box>
@@ -581,7 +591,7 @@ const SinglePage = () => {
                                   Heating and cooling
                                 </Text>
                                 <Flex direction={"column"}>
-                                  {singlehome?.amenities.includes(
+                                  {singleHome?.amenities.includes(
                                     "Indoor Fireplace"
                                   ) ? (
                                     <>
@@ -594,8 +604,7 @@ const SinglePage = () => {
                                       <Divider colorScheme={"gray"} mt={2} />
                                     </>
                                   ) : null}
-
-                                  {singlehome?.amenities.includes("heating") ? (
+                                  {singleHome?.amenities.includes("heating") ? (
                                     <Box height="40px" mt={4}>
                                       <Flex gap={5} alignItems={"center"}>
                                         <FaTemperatureHigh size={22} />
@@ -612,7 +621,7 @@ const SinglePage = () => {
                                   Home safety
                                 </Text>
                                 <Flex direction={"column"}>
-                                  {singlehome?.amenities.includes("cameras") ? (
+                                  {singleHome?.amenities.includes("cameras") ? (
                                     <>
                                       <Box height="40px" mt={4}>
                                         <Flex gap={5} alignItems={"center"}>
@@ -631,7 +640,7 @@ const SinglePage = () => {
                                     </>
                                   ) : null}
 
-                                  {singlehome?.amenities.includes(
+                                  {singleHome?.amenities.includes(
                                     "Smoke alarm"
                                   ) ? (
                                     <>
@@ -647,7 +656,7 @@ const SinglePage = () => {
                                     </>
                                   ) : null}
 
-                                  {singlehome?.amenities.includes(
+                                  {singleHome?.amenities.includes(
                                     "Carbon monoxide alarm"
                                   ) ? (
                                     <>
@@ -663,7 +672,7 @@ const SinglePage = () => {
                                     </>
                                   ) : null}
 
-                                  {singlehome?.amenities.includes(
+                                  {singleHome?.amenities.includes(
                                     "Self checkIn"
                                   ) ? (
                                     <>
@@ -685,7 +694,7 @@ const SinglePage = () => {
                                 <Text textColor={"black"} fontWeight={"bold"}>
                                   Internet and office
                                 </Text>
-                                {singlehome?.amenities.includes("wifi") ? (
+                                {singleHome?.amenities.includes("wifi") ? (
                                   <>
                                     <Box height="40px" mt={4}>
                                       <Flex gap={5}>
@@ -697,7 +706,7 @@ const SinglePage = () => {
                                   </>
                                 ) : null}
 
-                                {singlehome?.amenities.includes("Tv") ? (
+                                {singleHome?.amenities.includes("Tv") ? (
                                   <>
                                     <Box height="40px" mt={4}>
                                       <Flex gap={5}>
@@ -715,7 +724,7 @@ const SinglePage = () => {
                                   Kitchen and dining
                                 </Text>
                                 <Flex direction={"column"}>
-                                  {singlehome?.amenities.includes(
+                                  {singleHome?.amenities.includes(
                                     "Refrigerator"
                                   ) ? (
                                     <>
@@ -729,7 +738,7 @@ const SinglePage = () => {
                                     </>
                                   ) : null}
 
-                                  {singlehome?.amenities.includes("Kitchen") ? (
+                                  {singleHome?.amenities.includes("Kitchen") ? (
                                     <>
                                       <Box height="40px" mt={4}>
                                         <Flex gap={5}>
@@ -743,7 +752,7 @@ const SinglePage = () => {
                                     </>
                                   ) : null}
 
-                                  {singlehome?.amenities.includes("Dishes") ? (
+                                  {singleHome?.amenities.includes("Dishes") ? (
                                     <>
                                       <Box height="40px" mt={4}>
                                         <Flex gap={5}>
@@ -761,7 +770,7 @@ const SinglePage = () => {
                                     </>
                                   ) : null}
 
-                                  {singlehome?.amenities.includes(
+                                  {singleHome?.amenities.includes(
                                     "Coffee maker"
                                   ) ? (
                                     <>
@@ -784,7 +793,7 @@ const SinglePage = () => {
                                   Services
                                 </Text>
                                 <Flex direction={"column"}>
-                                  {singlehome?.amenities.includes(
+                                  {singleHome?.amenities.includes(
                                     "petsallowed"
                                   ) ? (
                                     <>
@@ -805,7 +814,7 @@ const SinglePage = () => {
 
                                   <Divider colorScheme={"gray"} mt={2} />
 
-                                  {singlehome?.amenities.includes(
+                                  {singleHome?.amenities.includes(
                                     "Breakfast"
                                   ) ? (
                                     <>
@@ -824,7 +833,7 @@ const SinglePage = () => {
                                     </>
                                   ) : null}
 
-                                  {singlehome?.amenities.includes(
+                                  {singleHome?.amenities.includes(
                                     "washing mashin"
                                   ) ? (
                                     <>
@@ -840,7 +849,7 @@ const SinglePage = () => {
                                     </>
                                   ) : null}
 
-                                  {singlehome?.amenities.includes(
+                                  {singleHome?.amenities.includes(
                                     "Air Conditionary"
                                   ) ? (
                                     <>
@@ -856,7 +865,7 @@ const SinglePage = () => {
                                     </>
                                   ) : null}
 
-                                  {singlehome?.amenities.includes(
+                                  {singleHome?.amenities.includes(
                                     "Hair dryer"
                                   ) ? (
                                     <>
@@ -872,7 +881,7 @@ const SinglePage = () => {
                                     </>
                                   ) : null}
 
-                                  {singlehome?.amenities.includes("shampoo") ? (
+                                  {singleHome?.amenities.includes("shampoo") ? (
                                     <>
                                       <Box height="40px" mt={4}>
                                         <Flex gap={5}>
@@ -886,7 +895,7 @@ const SinglePage = () => {
                                     </>
                                   ) : null}
 
-                                  {singlehome?.amenities.includes(
+                                  {singleHome?.amenities.includes(
                                     "Building staff"
                                   ) ? (
                                     <>
@@ -914,7 +923,7 @@ const SinglePage = () => {
                                 </Text>
 
                                 <Flex direction={"column"}>
-                                  {singlehome?.amenities.includes(
+                                  {singleHome?.amenities.includes(
                                     "Kitchen"
                                   ) ? null : (
                                     <>
@@ -932,7 +941,7 @@ const SinglePage = () => {
                                     </>
                                   )}
 
-                                  {singlehome?.amenities.includes(
+                                  {singleHome?.amenities.includes(
                                     "Tv"
                                   ) ? null : (
                                     <>
@@ -950,7 +959,7 @@ const SinglePage = () => {
                                     </>
                                   )}
 
-                                  {singlehome?.amenities.includes(
+                                  {singleHome?.amenities.includes(
                                     "washing mashin"
                                   ) ? null : (
                                     <>
@@ -968,7 +977,7 @@ const SinglePage = () => {
                                     </>
                                   )}
 
-                                  {singlehome?.amenities.includes(
+                                  {singleHome?.amenities.includes(
                                     "Air Conditionary"
                                   ) ? null : (
                                     <>
@@ -986,7 +995,7 @@ const SinglePage = () => {
                                     </>
                                   )}
 
-                                  {singlehome?.amenities.includes(
+                                  {singleHome?.amenities.includes(
                                     "Hair dryer"
                                   ) ? null : (
                                     <>
@@ -1004,7 +1013,7 @@ const SinglePage = () => {
                                     </>
                                   )}
 
-                                  {singlehome?.amenities.includes(
+                                  {singleHome?.amenities.includes(
                                     "Carbon monoxide alarm"
                                   ) ? null : (
                                     <>
@@ -1028,7 +1037,7 @@ const SinglePage = () => {
                                     </>
                                   )}
 
-                                  {singlehome?.amenities.includes(
+                                  {singleHome?.amenities.includes(
                                     "shampoo"
                                   ) ? null : (
                                     <>
@@ -1046,7 +1055,7 @@ const SinglePage = () => {
                                     </>
                                   )}
 
-                                  {singlehome?.amenities.includes(
+                                  {singleHome?.amenities.includes(
                                     "Self checkIn"
                                   ) ? null : (
                                     <>
@@ -1064,7 +1073,7 @@ const SinglePage = () => {
                                     </>
                                   )}
 
-                                  {singlehome?.amenities.includes(
+                                  {singleHome?.amenities.includes(
                                     "Building staff"
                                   ) ? null : (
                                     <>
@@ -1082,7 +1091,7 @@ const SinglePage = () => {
                                     </>
                                   )}
 
-                                  {singlehome?.amenities.includes(
+                                  {singleHome?.amenities.includes(
                                     "Coffee maker"
                                   ) ? null : (
                                     <>
@@ -1100,7 +1109,7 @@ const SinglePage = () => {
                                     </>
                                   )}
 
-                                  {singlehome?.amenities.includes(
+                                  {singleHome?.amenities.includes(
                                     "Tv"
                                   ) ? null : (
                                     <>
@@ -1118,7 +1127,7 @@ const SinglePage = () => {
                                     </>
                                   )}
 
-                                  {singlehome?.amenities.includes(
+                                  {singleHome?.amenities.includes(
                                     "Dishes"
                                   ) ? null : (
                                     <>
@@ -1136,7 +1145,7 @@ const SinglePage = () => {
                                     </>
                                   )}
 
-                                  {singlehome?.amenities.includes(
+                                  {singleHome?.amenities.includes(
                                     "essentials"
                                   ) ? null : (
                                     <>
@@ -1154,7 +1163,7 @@ const SinglePage = () => {
                                     </>
                                   )}
 
-                                  {singlehome?.amenities.includes(
+                                  {singleHome?.amenities.includes(
                                     "heating"
                                   ) ? null : (
                                     <>
@@ -1172,7 +1181,7 @@ const SinglePage = () => {
                                     </>
                                   )}
 
-                                  {singlehome?.amenities.includes(
+                                  {singleHome?.amenities.includes(
                                     "Smoke alarm"
                                   ) ? null : (
                                     <>
@@ -1190,7 +1199,7 @@ const SinglePage = () => {
                                     </>
                                   )}
 
-                                  {singlehome?.amenities.includes(
+                                  {singleHome?.amenities.includes(
                                     "petsallowed"
                                   ) ? null : (
                                     <>
@@ -1208,7 +1217,7 @@ const SinglePage = () => {
                                     </>
                                   )}
 
-                                  {singlehome?.amenities.includes(
+                                  {singleHome?.amenities.includes(
                                     "Indoor Fireplace"
                                   ) ? null : (
                                     <>
@@ -1226,7 +1235,7 @@ const SinglePage = () => {
                                     </>
                                   )}
 
-                                  {singlehome?.amenities.includes(
+                                  {singleHome?.amenities.includes(
                                     "wifi"
                                   ) ? null : (
                                     <>
@@ -1259,7 +1268,7 @@ const SinglePage = () => {
               {/* <Skeleton fitContent isLoaded={!loading}> */}
                 <Box w={"40%"}>
                   <Box position={"sticky"} top={20}>
-                    <FlothingSlide singlehome={singlehome} />
+                    <FlothingSlide singlehome={singleHome} />
                   </Box>
                 </Box>
               {/* </Skeleton> */}
@@ -1276,7 +1285,7 @@ const SinglePage = () => {
               >
                 <Flex justifyContent={"space-between"}>
                   <Box p={3}>
-                    <Text>&#8377;{singlehome?.price}</Text>
+                    <Text>&#8377;{singleHome?.price}</Text>
                     <Text decoration={"underline"}>nights</Text>
                   </Box>
                   <Box p={3}>
@@ -1291,7 +1300,7 @@ const SinglePage = () => {
 
           <Divider colorScheme={"gray"} />
           <Skeleton fitContent isLoaded={!loading}>
-            <Review singlehome={singlehome} />
+            <Review singleHome={singleHome} />
           </Skeleton>
 
           <Divider colorScheme={"gray"} />
@@ -1357,6 +1366,7 @@ const SinglePage = () => {
               </Flex>
             </Box>
           </Skeleton>
+
         </Box>
       </Layout>
       <Divider colorScheme={"gray"} />

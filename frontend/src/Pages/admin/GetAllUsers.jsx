@@ -2,8 +2,6 @@ import React from "react";
 import moment from "moment";
 import {
   Box,
-  Image,
-  Text,
   TableContainer,
   Table,
   TableCaption,
@@ -11,13 +9,14 @@ import {
   Tr,
   Th,
   Tbody,
-  Td,
   Button,
+  useToast,
 } from "@chakra-ui/react";
 import { UpdateUserStatus, getAllUsers } from "../../ApiCalls/user";
 
 const GetAllUsers = ({usersData,setusersData}) => {
 
+    const toast = useToast();
 
 
     const getData =async()=>{
@@ -25,9 +24,17 @@ const GetAllUsers = ({usersData,setusersData}) => {
             const response = await getAllUsers();
             if(response.success){
               setusersData(response.data);
+            }else{
+              throw new Error(response.message);
             }
         } catch (error) {
-          console.error(error.message)
+          toast({
+            title: "Error Occured in geting All Users",
+            description: error.message,
+            status: "error",
+            duration: 2000,
+            isClosable: true,
+          });
         }
     }
 
@@ -40,7 +47,13 @@ const GetAllUsers = ({usersData,setusersData}) => {
               throw new Error(response.message);
             }
           } catch (error) {
-            console.log(error.message);
+            toast({
+              title: "Error Occured in Update User Status",
+              description: error.message,
+              status: "error",
+              duration: 2000,
+              isClosable: true,
+            });
           }
     }
 

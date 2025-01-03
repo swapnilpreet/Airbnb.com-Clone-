@@ -11,24 +11,31 @@ import {
   Tbody,
   Tfoot,
   Button,
+  useToast,
 } from "@chakra-ui/react";
 import { GetAllHome, UpdateHomeStatus } from "../../ApiCalls/home";
 import moment from "moment";
-
 const AllHomes = () => {
+  const toast = useToast();
   const [Homes, setHomes] = useState([]);
+
 
   const getData = async () => {
     try {
       const response = await GetAllHome();
       if (response.success) {
-        console.log("all homes", response.data);
         setHomes(response.data);
       } else {
         throw new Error("Couldn't gets all homes");
       }
     } catch (error) {
-      console.log(error);
+      toast({
+        title: "Error Occured in Get All Homes",
+        description: error.message,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
   };
 
@@ -41,7 +48,13 @@ const AllHomes = () => {
         throw new Error("Couldn't gets all homes");
       }
     } catch (error) {
-      console.log(error);
+      toast({
+        title: "Error Occured in Home Status Update",
+        description: error.message,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
   };
 

@@ -22,6 +22,7 @@ import {
   SimpleGrid,
   Text,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import mainlogo from "../../Accests/mainlogo.svg";
 import { BiSearchAlt2 } from "react-icons/bi";
@@ -36,14 +37,18 @@ import { GetAllHome, GetHomeBySearch } from "../../ApiCalls/home";
 import { SetHomes } from "../../Redux/HomeSlice";
 
 const HomeNavbar = () => {
+  const toast = useToast();
   const model2 = useDisclosure();
   const searchmodel = useDisclosure();
   const [regionDisplay, setregionDisplay] = useState("");
   const { region } = useSelector((state) => state.region);
+  const category= useSelector((state)=>state?.region.category);
   const theme = useTheme();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const inputElem = useRef(null);
+
+  const { user } = useSelector((state) => state?.users);
 
   const debounce = (func, wait) => {
     let timeout;
@@ -53,10 +58,12 @@ const HomeNavbar = () => {
     };
   };
 
-  const getSearchData = async (value) => {
+  const getSearchData = async (searchKey) => {
     try {
-      if (value !== "") {
-        const response = await GetHomeBySearch(value);
+      if (searchKey !== "") {
+        console.log("Search key ", searchKey);
+        console.log("region", region);
+        const response = await GetHomeBySearch(searchKey,category,region);
         if (response.success) {
           dispatch(SetHomes(response.data));
         } else {
@@ -66,25 +73,38 @@ const HomeNavbar = () => {
         getData();
       }
     } catch (error) {
-      console.log(error.message);
+      toast({
+        title: "Error Occured in Searching Homes",
+        description: error.message,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
   };
 
   const getData = async () => {
     try {
-      const response = await GetAllHome({ region: region });
+      const response = await GetAllHome({Category:category ,region: region });
       if (response.success) {
         dispatch(SetHomes(response.data));
       } else {
         throw new Error(response.message);
       }
     } catch (error) {
-      console.error(error.message);
+      toast({
+        title: "Error Occured in Geting Homes",
+        description: error.message,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+      
     }
   };
 
   const handleSearch = useCallback(
-    debounce((inputVal) => getSearchData(inputVal), 500),
+    debounce((inputVal) => getSearchData(inputVal), 1000),
     []
   );
 
@@ -99,7 +119,6 @@ const HomeNavbar = () => {
     dispatch(SetUser(null));
   };
 
-  const { user } = useSelector((state) => state?.users);
 
   return (
     <Box pos="fixed" w="100%" bg={"white"} top={0} zIndex={500}>
@@ -123,7 +142,7 @@ const HomeNavbar = () => {
                 p={2}
                 fontWeight={"bold"}
               >
-                {regionDisplay !== "" ? regionDisplay : "Anywhere"}
+                {region !== "" ? region : "Anywhere"}
               </Text>
               <Text borderRight={"1px solid grey"} p={2}>
                 Anyweek
@@ -377,20 +396,3 @@ const HomeNavbar = () => {
 };
 
 export default HomeNavbar;
-
-// https://a0.muscache.com/pictures/f9ec8a23-ed44-420b-83e5-10ff1f071a13.jpg
-
-// united k
-// https://a0.muscache.com/im/pictures/dbb2b5ef-2efe-4099-81ac-c7b957f384ed.jpg?im_w=320
-
-// euorpe
-// https://a0.muscache.com/im/pictures/7b5cf816-6c16-49f8-99e5-cbc4adfd97e2.jpg?im_w=320
-
-// indonesia
-// https://a0.muscache.com/im/pictures/ebc5a343-8b76-4ae5-8700-eb5e9cec9243.jpg?im_w=320
-
-// asia
-// https://a0.muscache.com/im/pictures/d77de9f5-5318-4571-88c7-e97d2355d20a.jpg?im_w=320
-
-// united state
-// https://a0.muscache.com/im/pictures/cd9f2bf0-eefc-4980-b7cb-9c8ca3dae883.jpg?im_w=320

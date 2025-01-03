@@ -7,6 +7,7 @@ import { axiosInstance } from "./axiosinstance";
 export const GetAirbnbHomeById = async (id)=>{
   try{
      const response = await axiosInstance.get(`/api/add-home/get-place/${id}`);
+     console.log("response Api", response.data.data);
      return response.data;
   }catch(error){
     return error.message;
@@ -72,9 +73,20 @@ export const UpdateHomeStatus = async (id,status)=>{
 }
 // /get-homes-by-search/:key
 
-export const GetHomeBySearch = async (value)=>{
+// export const GetHomeBySearch = async (value)=>{
+//   try {
+//      const response = await axiosInstance.get(`/api/add-home/get-homes-by-search/${value}`)
+//      return response.data;
+//   } catch (error) {
+//      return error.message;
+//   }
+// }
+
+
+
+export const GetHomeBySearch = async (searchKey,category,region)=>{
   try {
-     const response = await axiosInstance.get(`/api/add-home/get-homes-by-search/${value}`)
+     const response = await axiosInstance.get(`/api/add-home/get-homes-by-search/${searchKey}?Category=${category}&region=${region}`)
      return response.data;
   } catch (error) {
      return error.message;

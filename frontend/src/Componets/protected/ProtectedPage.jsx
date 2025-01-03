@@ -5,7 +5,7 @@ import { SetUser } from "../../Redux/userSlice";
 import { GetCurrentUser } from "../../ApiCalls/user";
 import { useToast } from "@chakra-ui/react";
 
-const ProtectedPage = ({ children }) => {
+const ProtectedPage = ({children}) => {
   const toast = useToast();
   const navigate = useNavigate();
   const dispatch = useDispatch();

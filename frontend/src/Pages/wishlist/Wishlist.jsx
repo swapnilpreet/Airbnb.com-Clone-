@@ -8,7 +8,7 @@ const Wishlist = () => {
     <Box>
       <PagesNavbar />
       <Layout>
-        <Text fontSize={"4xl"}>Wishlists</Text>
+        <Text textAlign={'center'} fontSize={"4xl"}>Wishlists</Text>
         <Box>
           <Card />
         </Box>

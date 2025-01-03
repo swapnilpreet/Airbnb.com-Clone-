@@ -14,6 +14,7 @@ import { Box } from "@chakra-ui/react";
 import SinglePage from "./singlepage/SinglePage";
 import GetmyHomes from "./addHome/GetmyHomes";
 import UserHomes from "./addHome/UserHomes";
+import ProtectedRoute from "../utils/ProtectedRoute";
 
 const MainRoutes = () => {
   return (
@@ -25,9 +26,9 @@ const MainRoutes = () => {
         <Route
           path="/"
           element={
-            <ProtectedPage>
+            <ProtectedRoute>
               <Home />
-            </ProtectedPage>
+            </ProtectedRoute>
           }
         />
         <Route

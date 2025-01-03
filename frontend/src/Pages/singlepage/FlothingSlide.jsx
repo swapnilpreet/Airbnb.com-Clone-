@@ -7,6 +7,7 @@ import {
   Text,
   Skeleton,
   Tooltip,
+  useToast,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { differenceInDays } from "date-fns";
@@ -18,8 +19,9 @@ import { BsPatchQuestionFill } from "react-icons/bs";
 import { AiFillStar } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { SetLoader } from "../../Redux/LoadingSlice";
-// import {Skeleton}
+
 const FlothingSlide = ({ singlehome }) => {
+  const toast = useToast();
   const { loading } = useSelector((state) => state.loaders);
   const [checkIn, setcheckIn] = useState();
   const [checkOut, setcheckOut] = useState();
@@ -28,8 +30,7 @@ const FlothingSlide = ({ singlehome }) => {
   const [clientToken, setclientToken] = useState("");
   const [instance, setinstance] = useState("");
   const navigate = useNavigate();
-  const dispatch = useDispatch()
-  //numberOfNights
+  const dispatch = useDispatch();
 
   let numberOfNights = 0;
   if (checkIn && checkOut) {
@@ -50,7 +51,13 @@ const FlothingSlide = ({ singlehome }) => {
         navigate("/trip");
       }
     } catch (error) {
-      console.log(error.message);
+      toast({
+        title: "Error Occured in Add to booking",
+        description: error.message,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
   };
 
@@ -67,7 +74,13 @@ const FlothingSlide = ({ singlehome }) => {
         throw new Error(response.message);
       }
     } catch (error) {
-      console.log(error.message);
+      toast({
+        title: "Error Occured in handle payment",
+        description: error.message,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
   };
 
@@ -77,10 +90,16 @@ const FlothingSlide = ({ singlehome }) => {
       if (response.success) {
         setclientToken(response.data.clientToken);
       } else {
-        console.log(response.message);
+        throw new Error(response.message);
       }
     } catch (error) {
-      console.log(error.message);
+      toast({
+        title: "Error Occured in get Payment Token",
+        description: error.message,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
   };
 

@@ -197,7 +197,6 @@ router.post("/get-all-homes", authentication, async (req, res) => {
     }
     
     const getHomes = await AddHome.find(filters).populate("owner");
-    // console.log(getHomes)
     res.send({
       success: true,
       message: "fetting user data",
@@ -274,26 +273,25 @@ router.put("/update-homes-status/:id", authentication, async (req, res) => {
   }
 });
 
-router.get("/get-homes-by-search/:key", async (req, res) => {
-  try {
-    const { key } = req.params;
-    const response = await AddHome.find({ 
-      $or: [
-         { address: {$regex: key, $options: "i"}}
-      ]
-    })
-    // });
-    res.send({
-      success: true,
-      data: response,
-    });
-  } catch (error) {
-    res.send({
-      success: false,
-      message: error.message,
-    });
-  }
-});
+// router.get("/get-homes-by-search/:key", async (req, res) => {
+//   try {
+//     const { key } = req.params;
+//     const response = await AddHome.find({ 
+//       $or: [
+//          { address: {$regex: key, $options: "i"}}
+//       ]
+//     })
+//     res.send({
+//       success: true,
+//       data: response,
+//     });
+//   } catch (error) {
+//     res.send({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// });
 
 router.delete('/delete/:homeid',authentication,async(req, res)=>{
   try {
@@ -315,6 +313,41 @@ router.delete('/delete/:homeid',authentication,async(req, res)=>{
       success:false,
       message:error.message,
     })
+  }
+});
+
+
+router.get("/get-homes-by-search/:key", async (req, res) => {
+  try {
+    const { key } = req.params; // Search key from request params
+    const { category, region } = req.query; // Category and region from query params
+
+    // Initial filter based on category and region
+    const initialFilter = {};
+    if (category) initialFilter.Category = category;
+    if (region) initialFilter.region = region;
+
+    // Fetch data based on category and region
+    const initialData = await AddHome.find(initialFilter);
+    
+    console.log(initialData)
+    // Apply search filter on the initial data
+    const filteredData = initialData.filter(item =>
+      // Check if any of the specified fields match the search key
+      [item.address, item.user, item.pass, item.Category, item.region].some(field =>
+        field && field.toLowerCase().includes(key.toLowerCase())
+      )
+    );
+    res.send({
+      success: true,
+      data: filteredData,
+    });
+
+  } catch (error) {
+    res.send({
+      success: false,
+      message: error.message,
+    });
   }
 });
 

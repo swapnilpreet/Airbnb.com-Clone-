@@ -47,8 +47,8 @@ const countries = [
   { value: "Golfing", text: "Golfing" },
 ];
 
-const options = countries.map((option) => {
-  return <option value={option.value}>{option.text}</option>;
+const options = countries.map((option,index) => {
+  return <option key={index} value={option.value}>{option.text}</option>;
 });
 
 const ratings = [
@@ -68,8 +68,8 @@ const ratings = [
   { value: "5.0", text: "5.0" },
 ];
 
-const ratingoptions = ratings.map((option) => {
-  return <option value={option.value}>{option.text}</option>;
+const ratingoptions = ratings.map((option,index) => {
+  return <option key={index} value={option.value}>{option.text}</option>;
 });
 
 const region = [
@@ -80,8 +80,8 @@ const region = [
   { value: "United kingdom", text: "United kingdom" },
 ];
 
-const regionoptions = region.map((option) => {
-  return <option value={option.value}>{option.text}</option>;
+const regionoptions = region.map((option,index) => {
+  return <option key={index} value={option.value}>{option.text}</option>;
 });
 
 const AddHome = () => {

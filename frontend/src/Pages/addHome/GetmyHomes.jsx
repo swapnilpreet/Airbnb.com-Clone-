@@ -35,18 +35,18 @@ import {
   GetUserHome,
 } from "../../ApiCalls/home";
 import { BiSolidHomeHeart } from "react-icons/bi";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import PhotosUploader from "../../Componets/PhotosUploader";
 import Amenties from "../../Componets/Amenties";
 import { useDispatch, useSelector } from "react-redux";
 import { SetUserHome } from "../../Redux/HomeSlice";
 
-const countries = [
+const Category = [
   { value: "Camping", text: "Camping" },
   { value: "Rooms", text: "Rooms" },
   { value: "Cabins", text: "Cabins" },
   { value: "Amazing pools", text: "Amazing pools" },
-  { value: "Bed&Farms", text: "Farms" },
+  { value: "Farms", text: "Farms" },
   { value: "Amazing Views", text: "Amazing Views" },
   { value: "Lakefront", text: "Lakefront" },
   { value: "OMG!", text: "OMG !" },
@@ -65,8 +65,8 @@ const countries = [
   { value: "Golfing", text: "Golfing" },
 ];
 
-const options = countries.map((option) => {
-  return <option value={option.value}>{option.text}</option>;
+const options = Category.map((option,index) => {
+  return <option key={index} value={option.value}>{option.text}</option>;
 });
 
 const ratings = [
@@ -86,8 +86,8 @@ const ratings = [
   { value: "5.0", text: "5.0" },
 ];
 
-const ratingoptions = ratings.map((option) => {
-  return <option value={option.value}>{option.text}</option>;
+const ratingoptions = ratings.map((option,index) => {
+  return <option key={index} value={option.value}>{option.text}</option>;
 });
 
 const region = [
@@ -98,8 +98,8 @@ const region = [
   { value: "United kingdom", text: "United kingdom" },
 ];
 
-const regionoptions = region.map((option) => {
-  return <option value={option.value}>{option.text}</option>;
+const regionoptions = region.map((option,index) => {
+  return <option key={index} value={option.value}>{option.text}</option>;
 });
 
 const GetmyHomes = () => {
@@ -133,7 +133,13 @@ const GetmyHomes = () => {
         throw new Error(response.message);
       }
     } catch (error) {
-      console.error(error.message);
+      toast({
+        title: "Error Occured in geting Home Details",
+        description: error.message,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
   };
 
@@ -155,9 +161,17 @@ const GetmyHomes = () => {
         setPrice(response.data.price);
         setregion(response.data.region);
         setrating(response.data.rating);
+      }else{
+        throw new Error(response.message);
       }
     } catch (error) {
-      console.error(error.message);
+      toast({
+        title: "Error Occured in Handle Editing Home",
+        description: error.message,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
   };
 
@@ -182,18 +196,18 @@ const GetmyHomes = () => {
       const response = await EditAirbnbHome(placeData);
       if (response.success) {
         toast({
-          title: "Edit successfull",
+          title: "Home Edit successfully",
           status: "success",
           duration: 2000,
           isClosable: true,
         });
         getHomesData();
       } else {
-        console.log(response.message);
+        throw new Error(response.message);
       }
     } catch (error) {
       toast({
-        title: "error Occured",
+        title: "Error Occured in Editing Home",
         description: error.message,
         status: "error",
         duration: 2000,
@@ -219,9 +233,9 @@ const GetmyHomes = () => {
       }
     } catch (error) {
       toast({
-        title: "Error Occurred",
+        title: "Error Occurred in Delete Home",
         description: error.message,
-        status: "success",
+        status: "error",
         duration: 1000,
         isClosable: true,
       });
@@ -242,12 +256,6 @@ const GetmyHomes = () => {
                 variant="outline"
                 mb={2}
               >
-                {/* <Image
-                  objectFit="cover"
-                  maxW={{ base: "100%", sm: "200px" }}
-                  src={offer.photos[0]}
-                  alt="Caffe Latte"
-                /> */}
                 <Box
                   onClick={() => navigate(`/homes/${offer._id}`)}
                   cursor={"pointer"}
