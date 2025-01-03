@@ -15,10 +15,7 @@ The Airbnb website is an online marketplace that connects people looking for sho
 <li>Nodejs</li>
 <li>Expressjs</li>
 <li>MongoDb</li>
-<li>Full Stack<li>
-<li>JWt<li>
-<li>bcryptjs<li>
-<li>Multer<li>
+<li>Full Stack<li><li>JWt<li><li>bcryptjs<li><li>Multer<li>
 </ul>
 
 # Features
