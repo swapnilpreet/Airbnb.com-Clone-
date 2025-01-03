@@ -4,7 +4,22 @@
 The Airbnb website is an online marketplace that connects people looking for short-term accommodations with property owners who want to rent out their homesand Europe.
 
 # For building this application we used Following Tech Stack:
-
+<ul>
+<li>React</li>
+<li>Redux-toolkit</li>
+<li>Chakra UI</li>
+<li>react-icons<li>
+<li>react-router-dom<li>
+<li>redux-toolkit<li>
+<li>Coudinary<li>
+<li>Nodejs</li>
+<li>Expressjs</li>
+<li>MongoDb</li>
+<li>Full Stack<li>
+<li>JWt<li>
+<li>bcryptjs<li>
+<li>Multer<li>
+</ul>
 
 # Features
 <ul>
