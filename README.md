@@ -1,5 +1,6 @@
-# AIRBNB.COM
+<p>Please note that the live link may take some time to load as it is hosted on a free MongoDB cluster, which might experience regional delays.</p>
 
+# AIRBNB.COM
 # what is AIRBNB.COM ?
 The Airbnb website is an online marketplace that connects people looking for short-term accommodations with property owners who want to rent out their homesand Europe.
 
