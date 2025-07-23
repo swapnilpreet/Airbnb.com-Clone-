@@ -58,7 +58,4 @@ The Airbnb website is an online marketplace that connects people looking for sho
 # Team Members
 <ul>
 <li>Swapnil Ramteke</li>
-<li>Dinesh Singh Bisht</li>
-<li>Kundan Kumar</li>
-<li>Faisal Khan</li>
 </ul>
